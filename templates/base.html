@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mechinagar Municipality{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .top-header {
+            background-color: white;
+            padding: 15px 0;
+            border-bottom: 3px solid #b91c1c;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .municipality-logo {
+            height: 70px;
+            width: auto;
+        }
+        
+        .municipality-title h1 {
+            color: #b91c1c;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .municipality-title p {
+            color: #2c3e50;
+            font-size: 0.9rem;
+            margin: 5px 0 0 0;
+        }
+        
+        /* Language Dropdown Styling */
+        .language-selector {
+            position: relative;
+        }
+        
+        .language-dropdown {
+            min-width: 150px;
+            border: 2px solid #2563a8;
+            border-radius: 8px;
+            background: white;
+            color: #2563a8;
+            font-weight: 600;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .language-dropdown:hover {
+            background: #2563a8;
+            color: white;
+        }
+        
+        .language-dropdown .dropdown-toggle::after {
+            margin-left: 10px;
+        }
+        
+        .dropdown-menu {
+            border: 2px solid #2563a8;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .dropdown-item {
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: #2563a8;
+            color: white;
+        }
+        
+        .dropdown-item.active {
+            background: #2563a8;
+            color: white;
+        }
+        
+        .dropdown-item i {
+            margin-right: 8px;
+        }
+        
+        .navbar {
+            background: #2c3e50 !important;
+            border-bottom: 3px solid #2563a8;
+        }
+        
+        .nav-link {
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #2563a8 !important;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-light">
+    
+    <!-- Top Header with Logo -->
+    <div class="top-header">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <!-- Replace with actual logo -->
+                    <div class="municipality-logo" style="background: #b91c1c; color: white; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; border-radius: 10px; font-weight: bold; font-size: 1.2rem;">
+                        मेनपा
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="municipality-title">
+                        <h1>Mechinagar Municipality, Office of The Municipal Executive</h1>
+                        <p>Koshi Province, Government of Nepal</p>
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <!-- Language Dropdown -->
+                    <div class="language-selector">
+                        <div class="dropdown">
+                            <button class="btn language-dropdown dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-language"></i> 
+                                <span id="current-lang">English</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="?lang=en">
+                                        <i class="fas fa-flag-usa"></i> English
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="?lang=ne">
+                                        <i class="fas fa-flag"></i> नेपाली (Nepali)
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-comments"></i> Complaint System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin/">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-home"></i> Dashboard
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <span class="nav-link text-light">
+                                <i class="fas fa-user"></i> {{ user.fullname }}
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout/">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login/">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register/">
+                                <i class="fas fa-user-plus"></i> Register
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container-fluid px-4 mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="container-fluid px-4 mt-4">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-5 py-4" style="background-color: #2c3e50; color: white;">
+        <div class="container text-center">
+            <p class="mb-0">© {% now "Y" %} Mechinagar Municipality. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Update current language display
+        const urlParams = new URLSearchParams(window.location.search);
+        const lang = urlParams.get('lang') || 'en';
+        const langDisplay = document.getElementById('current-lang');
+        
+        if (lang === 'ne') {
+            langDisplay.textContent = 'नेपाली';
+        } else {
+            langDisplay.textContent = 'English';
+        }
+        
+        // Highlight active language
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            if (item.href.includes('lang=' + lang)) {
+                item.classList.add('active');
+            }
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
