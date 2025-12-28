@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Citizen Registration - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .register-container {
+        max-width: 600px;
+        margin: 50px auto;
+    }
+    
+    .register-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .register-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .register-header i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .register-body {
+        padding: 40px;
+    }
+    
+    .btn-register {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-register:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+</style>
+
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-header">
+            <i class="fas fa-user-plus"></i>
+            <h2 class="mb-0">Citizen Registration</h2>
+            <p class="mb-0">Create your account to get started</p>
+        </div>
+        
+        <div class="register-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-user"></i> Full Name <span class="text-danger">*</span>
+                    </label>
+                    <input type="text" name="fullname" class="form-control form-control-lg" 
+                           placeholder="Enter your full name" required 
+                           value="{{ request.POST.fullname }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i> Email Address <span class="text-danger">*</span>
+                    </label>
+                    <input type="email" name="email" class="form-control form-control-lg" 
+                           placeholder="Enter your email" required 
+                           value="{{ request.POST.email }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-map-marked-alt"></i> Ward Number
+                    </label>
+                    <select name="ward" class="form-select form-select-lg">
+                        <option value="">-- Select Ward --</option>
+                        {% for i in "123456789012345" %}
+                            <option value="{{ forloop.counter }}">Ward {{ forloop.counter }}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="text-muted">Select your ward (1-15)</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-phone"></i> Phone Number
+                    </label>
+                    <input type="tel" name="phone" class="form-control form-control-lg" 
+                           placeholder="Enter your phone number" 
+                           value="{{ request.POST.phone }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i> Password <span class="text-danger">*</span>
+                    </label>
+                    <input type="password" name="password" class="form-control form-control-lg" 
+                           placeholder="Create a password (min 6 characters)" 
+                           required minlength="6">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i> Confirm Password <span class="text-danger">*</span>
+                    </label>
+                    <input type="password" name="confirm_password" class="form-control form-control-lg" 
+                           placeholder="Re-enter your password" required>
+                </div>
+
+                <button type="submit" class="btn btn-register btn-lg w-100 mb-3">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+
+                <div class="text-center">
+                    <p class="mb-2">Already have an account? 
+                        <a href="{% url 'citizen_login' %}" class="fw-bold">Login here</a>
+                    </p>
+                    <a href="{% url 'home' %}" class="text-muted text-decoration-none">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

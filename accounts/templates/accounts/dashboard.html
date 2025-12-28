@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .stats-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        border-left: 5px solid;
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+    }
+    
+    .stats-card.pending {
+        border-color: #f39c12;
+    }
+    
+    .stats-card.progress {
+        border-color: #2563a8;
+    }
+    
+    .stats-card.resolved {
+        border-color: #27ae60;
+    }
+    
+    .stats-card h2 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin: 10px 0;
+    }
+    
+    .stats-card.pending h2 {
+        color: #f39c12;
+    }
+    
+    .stats-card.progress h2 {
+        color: #2563a8;
+    }
+    
+    .stats-card.resolved h2 {
+        color: #27ae60;
+    }
+    
+    .stats-card p {
+        color: #666;
+        margin: 0;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>
+                <i class="fas fa-home"></i> Welcome, {{ user.fullname }}! 👋
+            </h2>
+            {% if user.ward %}
+                <p class="text-muted">Ward {{ user.ward }}</p>
+            {% endif %}
+            <hr>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stats-card pending">
+                <i class="fas fa-clock" style="font-size: 2rem; color: #f39c12;"></i>
+                <h2>{{ stats.pending }}</h2>
+                <p>Pending</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stats-card progress">
+                <i class="fas fa-spinner" style="font-size: 2rem; color: #2563a8;"></i>
+                <h2>{{ stats.in_progress }}</h2>
+                <p>In Progress</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="stats-card resolved">
+                <i class="fas fa-check-circle" style="font-size: 2rem; color: #27ae60;"></i>
+                <h2>{{ stats.resolved }}</h2>
+                <p>Resolved</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i> Submit New Complaint
+                </a>
+                <a href="#" class="btn btn-secondary">
+                    <i class="fas fa-list"></i> My Complaints
+                </a>
+                <a href="#" class="btn btn-warning">
+                    <i class="fas fa-star"></i> Give Feedback
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Complaints -->
+    <div class="row">
+        <div class="col-12">
+            <h4><i class="fas fa-history"></i> Recent Complaints</h4>
+            {% if recent_complaints %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Ward</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for complaint in recent_complaints %}
+                                <tr>
+                                    <td>#{{ complaint.id }}</td>
+                                    <td>Ward {{ complaint.ward }}</td>
+                                    <td>{{ complaint.category }}</td>
+                                    <td>
+                                        {% if complaint.status == 'Pending' %}
+                                            <span class="badge bg-warning">Pending</span>
+                                        {% elif complaint.status == 'In Progress' %}
+                                            <span class="badge bg-primary">In Progress</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Resolved</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ complaint.created_at|date:"M d, Y" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> No complaints yet. Submit your first complaint!
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Citizen Login - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .login-container {
+        max-width: 500px;
+        margin: 50px auto;
+    }
+    
+    .login-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .login-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+        border-bottom: 3px solid #0066cc;
+    }
+    
+    .login-header i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .login-body {
+        padding: 40px;
+    }
+    
+    .btn-login {
+        background-color: #2563a8;
+        border: none;
+        color: white;
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-login:hover {
+        background-color: #1e4f8a;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 168, 0.4);
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <i class="fas fa-user-circle"></i>
+            <h2 class="mb-0">Citizen Login</h2>
+            <p class="mb-0">Welcome back! Please login to your account</p>
+        </div>
+        
+        <div class="login-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" name="email" class="form-control form-control-lg" 
+                           placeholder="Enter your email" required 
+                           value="{{ request.POST.email }}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" name="password" class="form-control form-control-lg" 
+                           placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn btn-login btn-lg w-100 mb-3">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+
+                <div class="text-center">
+                    <p class="mb-2">Don't have an account? 
+                        <a href="{% url 'citizen_register' %}" class="fw-bold">Register here</a>
+                    </p>
+                    <a href="{% url 'home' %}" class="text-muted text-decoration-none">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
