@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Complaint - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .complaint-form-container {
+        max-width: 800px;
+        margin: 30px auto;
+    }
+    
+    .complaint-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .complaint-header {
+        background: linear-gradient(135deg, #2563a8 0%, #1e4f8a 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .complaint-header i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .complaint-body {
+        padding: 40px;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control, .form-select {
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #2563a8;
+        box-shadow: 0 0 0 0.2rem rgba(37, 99, 168, 0.15);
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #2563a8 0%, #1e4f8a 100%);
+        border: none;
+        color: white;
+        padding: 14px 30px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+        background: linear-gradient(135deg, #1e4f8a 0%, #2563a8 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37, 99, 168, 0.4);
+    }
+    
+    .image-preview {
+        max-width: 300px;
+        max-height: 300px;
+        margin-top: 15px;
+        border-radius: 8px;
+        display: none;
+    }
+</style>
+
+<div class="complaint-form-container">
+    <div class="complaint-card">
+        <div class="complaint-header">
+            <i class="fas fa-plus-circle"></i>
+            <h2 class="mb-0">Submit New Complaint</h2>
+            <p class="mb-0">Report civic issues in your ward</p>
+        </div>
+        
+        <div class="complaint-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-list"></i> Category <span class="text-danger">*</span>
+                        </label>
+                        <select name="category" class="form-select form-select-lg" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="Road Maintenance">🛣️ Road Maintenance</option>
+                            <option value="Street Light">💡 Street Light</option>
+                            <option value="Water Supply">💧 Water Supply</option>
+                            <option value="Sanitation">🗑️ Sanitation</option>
+                            <option value="Traffic">🚦 Traffic</option>
+                            <option value="Parks">🌳 Parks & Recreation</option>
+                            <option value="Other">📌 Other</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-map-marked-alt"></i> Ward Number <span class="text-danger">*</span>
+                        </label>
+                        <select name="ward" class="form-select form-select-lg" required>
+                            <option value="">-- Select Ward --</option>
+                            {% for i in "123456789012345" %}
+                                <option value="{{ forloop.counter }}" {% if user.ward == forloop.counter|stringformat:"s" %}selected{% endif %}>
+                                    Ward {{ forloop.counter }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-muted">
+                            {% if user.ward %}
+                                Your registered ward: <strong>Ward {{ user.ward }}</strong>
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-file-alt"></i> Description <span class="text-danger">*</span>
+                    </label>
+                    <textarea name="description" class="form-control" rows="6" 
+                              required placeholder="Describe your complaint in detail... (minimum 10 characters)" 
+                              minlength="10"></textarea>
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i> Minimum 10 characters required
+                    </small>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="fas fa-camera"></i> Upload Image (Optional)
+                    </label>
+                    <input type="file" name="image" id="imageInput" 
+                           class="form-control" 
+                           accept="image/jpeg,image/png,image/gif,image/jpg"
+                           onchange="previewImage(event)">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i> Max 5MB. Allowed: JPG, PNG, GIF
+                    </small>
+                    <img id="imagePreview" class="image-preview img-thumbnail" alt="Preview">
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-submit btn-lg">
+                        <i class="fas fa-paper-plane"></i> Submit Complaint
+                    </button>
+                    <a href="{% url 'my_complaints' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-list"></i> View My Complaints
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const preview = document.getElementById('imagePreview');
+        const file = event.target.files[0];
+        
+        if (file) {
+            // Check file size
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size must not exceed 5MB!');
+                event.target.value = '';
+                preview.style.display = 'none';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            preview.style.display = 'none';
+        }
+    }
+</script>
+{% endblock %}

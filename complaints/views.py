@@ -1,3 +1,75 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.files.storage import FileSystemStorage
+from .models import Complaint
 
-# Create your views here.
+@login_required
+def submit_complaint(request):
+    """Submit new complaint"""
+    if request.method == 'POST':
+        category = request.POST.get('category', '').strip()
+        ward = request.POST.get('ward', '').strip()
+        description = request.POST.get('description', '').strip()
+        image = request.FILES.get('image')
+        
+        # Validation
+        if not category or not ward or not description:
+            messages.error(request, 'Category, ward, and description are required.')
+            return render(request, 'complaints/submit_complaint.html')
+        
+        if len(description) < 10:
+            messages.error(request, 'Description must be at least 10 characters long.')
+            return render(request, 'complaints/submit_complaint.html')
+        
+        # Image validation
+        if image:
+            if image.size > 5 * 1024 * 1024:  # 5MB
+                messages.error(request, 'Image size must not exceed 5MB.')
+                return render(request, 'complaints/submit_complaint.html')
+            
+            allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg']
+            if image.content_type not in allowed_types:
+                messages.error(request, 'Only JPG, JPEG, PNG, and GIF images are allowed.')
+                return render(request, 'complaints/submit_complaint.html')
+        
+        # Create complaint
+        complaint = Complaint.objects.create(
+            user=request.user,
+            category=category,
+            ward=ward,
+            description=description,
+            image=image
+        )
+        
+        messages.success(request, f'✅ Complaint submitted successfully! Your complaint ID is #{complaint.id}')
+        return redirect('my_complaints')
+    
+    return render(request, 'complaints/submit_complaint.html')
+
+
+@login_required
+def my_complaints(request):
+    """View user's complaints"""
+    complaints = Complaint.objects.filter(user=request.user).order_by('-created_at')
+    
+    # Filter by status if provided
+    status_filter = request.GET.get('status')
+    if status_filter:
+        complaints = complaints.filter(status=status_filter)
+    
+    context = {
+        'complaints': complaints,
+        'status_filter': status_filter
+    }
+    return render(request, 'complaints/my_complaints.html', context)
+
+
+@login_required
+def complaint_detail(request, pk):
+    """View single complaint details"""
+    complaint = get_object_or_404(Complaint, pk=pk, user=request.user)
+    context = {
+        'complaint': complaint
+    }
+    return render(request, 'complaints/complaint_detail.html', context)

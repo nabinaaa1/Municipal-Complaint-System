@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}My Complaints - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .status-pending {
+        background-color: #fef3c7;
+        color: #92400e;
+        border: 2px solid #fbbf24;
+    }
+    
+    .status-progress {
+        background-color: #dbeafe;
+        color: #1e40af;
+        border: 2px solid #3b82f6;
+    }
+    
+    .status-resolved {
+        background-color: #d1fae5;
+        color: #065f46;
+        border: 2px solid #10b981;
+    }
+    
+    .complaint-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .complaint-card:hover {
+        border-color: #2563a8;
+        box-shadow: 0 8px 20px rgba(37, 99, 168, 0.1);
+        transform: translateY(-3px);
+    }
+    
+    .filter-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>
+                <i class="fas fa-list"></i> My Complaints
+            </h2>
+            <p class="text-muted">View and track all your submitted complaints</p>
+        </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="filter-card">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label"><i class="fas fa-filter"></i> Filter by Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All Status</option>
+                    <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Resolved" {% if status_filter == 'Resolved' %}selected{% endif %}>Resolved</option>
+                </select>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+                <a href="{% url 'my_complaints' %}" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Reset
+                </a>
+            </div>
+            <div class="col-md-4 d-flex align-items-end justify-content-end">
+                <a href="{% url 'submit_complaint' %}" class="btn btn-success">
+                    <i class="fas fa-plus-circle"></i> New Complaint
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Complaints List -->
+    {% if complaints %}
+        <div class="row">
+            {% for complaint in complaints %}
+                <div class="col-12">
+                    <div class="complaint-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-1">
+                                <div class="text-center">
+                                    <h4 class="mb-0 text-primary">#{{ complaint.id }}</h4>
+                                    <small class="text-muted">ID</small>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <span class="badge bg-secondary" style="font-size: 0.9rem;">
+                                    <i class="fas fa-map-marker-alt"></i> Ward {{ complaint.ward }}
+                                </span>
+                            </div>
+                            
+                            <div class="col-md-3">
+                                <h6 class="mb-1">
+                                    {% if complaint.category == 'Road Maintenance' %}🛣️
+                                    {% elif complaint.category == 'Street Light' %}💡
+                                    {% elif complaint.category == 'Water Supply' %}💧
+                                    {% elif complaint.category == 'Sanitation' %}🗑️
+                                    {% elif complaint.category == 'Traffic' %}🚦
+                                    {% elif complaint.category == 'Parks' %}🌳
+                                    {% else %}📌{% endif %}
+                                    {{ complaint.category }}
+                                </h6>
+                                <small class="text-muted">
+                                    <i class="far fa-calendar"></i> {{ complaint.created_at|date:"M d, Y" }}
+                                </small>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <p class="mb-0 text-truncate">
+                                    {{ complaint.description|truncatewords:15 }}
+                                </p>
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <div class="text-center">
+                                    {% if complaint.status == 'Pending' %}
+                                        <span class="status-badge status-pending">
+                                            <i class="fas fa-clock"></i> Pending
+                                        </span>
+                                    {% elif complaint.status == 'In Progress' %}
+                                        <span class="status-badge status-progress">
+                                            <i class="fas fa-spinner"></i> In Progress
+                                        </span>
+                                    {% else %}
+                                        <span class="status-badge status-resolved">
+                                            <i class="fas fa-check-circle"></i> Resolved
+                                        </span>
+                                    {% endif %}
+                                    
+                                    <div class="mt-2">
+                                        <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> View
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-inbox" style="font-size: 4rem; color: #3b82f6; margin-bottom: 1rem;"></i>
+            <h4>No Complaints Found</h4>
+            <p class="mb-3">You haven't submitted any complaints yet.</p>
+            <a href="{% url 'submit_complaint' %}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Submit Your First Complaint
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

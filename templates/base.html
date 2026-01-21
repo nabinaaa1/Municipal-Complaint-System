@@ -181,7 +181,7 @@
                             </span>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/logout/">
+                            <a class="nav-link" href="#" onclick="confirmLogout(event)">
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
                         </li>
@@ -246,6 +246,50 @@
                 item.classList.add('active');
             }
         });
+        
+        // Logout confirmation
+        function confirmLogout(event) {
+            event.preventDefault();
+            
+            // Create custom modal
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.id = 'logoutModal';
+            modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning text-dark">
+                            <h5 class="modal-title">
+                                <i class="fas fa-exclamation-triangle"></i> Confirm Logout
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center py-4">
+                            <i class="fas fa-sign-out-alt" style="font-size: 3rem; color: #f39c12; margin-bottom: 1rem;"></i>
+                            <h5>Are you sure you want to logout?</h5>
+                            <p class="text-muted mb-0">You will be redirected to the home page.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                            <a href="{% url 'logout' %}" class="btn btn-danger">
+                                <i class="fas fa-sign-out-alt"></i> Yes, Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+            
+            // Remove modal from DOM after hiding
+            modal.addEventListener('hidden.bs.modal', function () {
+                document.body.removeChild(modal);
+            });
+        }
     </script>
     
     {% block extra_js %}{% endblock %}
