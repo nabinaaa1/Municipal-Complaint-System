@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Give Feedback - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .feedback-container {
+        max-width: 700px;
+        margin: 40px auto;
+    }
+    
+    .feedback-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .feedback-header {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+    }
+    
+    .feedback-header i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    
+    .feedback-body {
+        padding: 40px;
+    }
+    
+    .star-rating {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 30px 0;
+    }
+    
+    .star-rating input[type="radio"] {
+        display: none;
+    }
+    
+    .star-rating label {
+        font-size: 3rem;
+        color: #d1d5db;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .star-rating label:hover,
+    .star-rating label:hover ~ label,
+    .star-rating input[type="radio"]:checked ~ label {
+        color: #fbbf24;
+        transform: scale(1.1);
+    }
+    
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+    
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #fbbf24;
+    }
+    
+    .star-rating input[type="radio"]:checked ~ label {
+        color: #fbbf24;
+    }
+    
+    .complaint-summary {
+        background: #f9fafb;
+        border-left: 4px solid #2563a8;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+</style>
+
+<div class="feedback-container">
+    <div class="feedback-card">
+        <div class="feedback-header">
+            <i class="fas fa-star"></i>
+            <h2 class="mb-0">Give Feedback</h2>
+            <p class="mb-0">Rate your experience with complaint resolution</p>
+        </div>
+        
+        <div class="feedback-body">
+            <!-- Complaint Summary -->
+            <div class="complaint-summary">
+                <h6 class="mb-2"><i class="fas fa-file-alt"></i> Complaint #{{ complaint.id }}</h6>
+                <p class="mb-1"><strong>Category:</strong> {{ complaint.category }}</p>
+                <p class="mb-1"><strong>Ward:</strong> Ward {{ complaint.ward }}</p>
+                <p class="mb-0"><strong>Status:</strong> 
+                    <span class="badge bg-success">Resolved</span>
+                </p>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="text-center mb-4">
+                    <label class="form-label d-block mb-3">
+                        <h5><i class="fas fa-star"></i> How satisfied are you with the resolution?</h5>
+                    </label>
+                    
+                    <div class="star-rating">
+                        <input type="radio" name="rating" value="5" id="star5" required>
+                        <label for="star5" title="5 stars">⭐</label>
+                        
+                        <input type="radio" name="rating" value="4" id="star4">
+                        <label for="star4" title="4 stars">⭐</label>
+                        
+                        <input type="radio" name="rating" value="3" id="star3">
+                        <label for="star3" title="3 stars">⭐</label>
+                        
+                        <input type="radio" name="rating" value="2" id="star2">
+                        <label for="star2" title="2 stars">⭐</label>
+                        
+                        <input type="radio" name="rating" value="1" id="star1">
+                        <label for="star1" title="1 star">⭐</label>
+                    </div>
+                    <small class="text-muted">Click on stars to rate (1 = Poor, 5 = Excellent)</small>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="fas fa-comment"></i> Your Feedback <span class="text-danger">*</span>
+                    </label>
+                    <textarea name="message" class="form-control form-control-lg" rows="5" 
+                              required placeholder="Please share your experience... (minimum 10 characters)"
+                              minlength="10"></textarea>
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle"></i> Minimum 10 characters required
+                    </small>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-warning btn-lg">
+                        <i class="fas fa-paper-plane"></i> Submit Feedback
+                    </button>
+                    <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left"></i> Back to Complaint
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -170,8 +170,23 @@
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" href="{% url 'citizen_dashboard' %}">
                                     <i class="fas fa-home"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'submit_complaint' %}">
+                                    <i class="fas fa-plus-circle"></i> Submit Complaint
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'my_complaints' %}">
+                                    <i class="fas fa-list"></i> My Complaints
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'my_feedback' %}">
+                                    <i class="fas fa-star"></i> My Feedback
                                 </a>
                             </li>
                         {% endif %}
@@ -187,12 +202,12 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/login/">
+                            <a class="nav-link" href="{% url 'citizen_login' %}">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/register/">
+                            <a class="nav-link" href="{% url 'citizen_register' %}">
                                 <i class="fas fa-user-plus"></i> Register
                             </a>
                         </li>

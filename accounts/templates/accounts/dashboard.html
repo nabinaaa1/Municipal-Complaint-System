@@ -12,6 +12,11 @@
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
         border-left: 5px solid;
+        height: 100%;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
     
     .stats-card:hover {
@@ -29,6 +34,18 @@
     
     .stats-card.resolved {
         border-color: #27ae60;
+    }
+    
+    .stats-card .icon-container {
+        margin-bottom: 10px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .stats-card .icon-container i {
+        font-size: 2.5rem;
     }
     
     .stats-card h2 {
@@ -53,6 +70,7 @@
         color: #666;
         margin: 0;
         font-size: 1.1rem;
+        font-weight: 500;
     }
 </style>
 
@@ -73,7 +91,9 @@
     <div class="row g-4 mb-5">
         <div class="col-md-4">
             <div class="stats-card pending">
-                <i class="fas fa-clock" style="font-size: 2rem; color: #f39c12;"></i>
+                <div class="icon-container">
+                    <i class="fas fa-clock" style="color: #f39c12;"></i>
+                </div>
                 <h2>{{ stats.pending }}</h2>
                 <p>Pending</p>
             </div>
@@ -81,7 +101,9 @@
         
         <div class="col-md-4">
             <div class="stats-card progress">
-                <i class="fas fa-spinner" style="font-size: 2rem; color: #2563a8;"></i>
+                <div class="icon-container">
+                    <i class="fas fa-spinner" style="color: #2563a8;"></i>
+                </div>
                 <h2>{{ stats.in_progress }}</h2>
                 <p>In Progress</p>
             </div>
@@ -89,7 +111,9 @@
         
         <div class="col-md-4">
             <div class="stats-card resolved">
-                <i class="fas fa-check-circle" style="font-size: 2rem; color: #27ae60;"></i>
+                <div class="icon-container">
+                    <i class="fas fa-check-circle" style="color: #27ae60;"></i>
+                </div>
                 <h2>{{ stats.resolved }}</h2>
                 <p>Resolved</p>
             </div>

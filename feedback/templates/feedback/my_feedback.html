@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}My Feedback - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .feedback-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .feedback-card:hover {
+        border-color: #f59e0b;
+        box-shadow: 0 8px 20px rgba(245, 158, 11, 0.1);
+        transform: translateY(-3px);
+    }
+    
+    .star-display {
+        color: #fbbf24;
+        font-size: 1.5rem;
+        letter-spacing: 3px;
+    }
+    
+    .feedback-message {
+        background: #f9fafb;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 4px solid #f59e0b;
+        margin-top: 15px;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>
+                <i class="fas fa-star"></i> My Feedback
+            </h2>
+            <p class="text-muted">All feedback you've submitted for resolved complaints</p>
+        </div>
+    </div>
+
+    <!-- Feedback List -->
+    {% if feedbacks %}
+        <div class="row">
+            {% for feedback in feedbacks %}
+                <div class="col-12">
+                    <div class="feedback-card">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-2">
+                                    <h5 class="mb-1">
+                                        <i class="fas fa-file-alt text-primary"></i> 
+                                        Complaint #{{ feedback.complaint.id }} - {{ feedback.complaint.category }}
+                                    </h5>
+                                    <small class="text-muted">
+                                        <i class="fas fa-map-marker-alt"></i> Ward {{ feedback.complaint.ward }} • 
+                                        <i class="far fa-calendar"></i> {{ feedback.created_at|date:"M d, Y - h:i A" }}
+                                    </small>
+                                </div>
+                                
+                                <div class="star-display mb-2">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= feedback.rating %}
+                                            ⭐
+                                        {% else %}
+                                            ☆
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span style="font-size: 1rem; color: #6b7280; margin-left: 10px;">
+                                        ({{ feedback.rating }}/5)
+                                    </span>
+                                </div>
+                                
+                                <div class="feedback-message">
+                                    <i class="fas fa-quote-left text-muted"></i>
+                                    <p class="mb-0 ms-2 d-inline">{{ feedback.message }}</p>
+                                    <i class="fas fa-quote-right text-muted"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4 d-flex align-items-center justify-content-end">
+                                <div class="text-center">
+                                    <a href="{% url 'complaint_detail' feedback.complaint.id %}" 
+                                       class="btn btn-outline-primary">
+                                        <i class="fas fa-eye"></i> View Complaint
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-star" style="font-size: 4rem; color: #f59e0b; margin-bottom: 1rem;"></i>
+            <h4>No Feedback Yet</h4>
+            <p class="mb-3">You haven't submitted any feedback yet. Give feedback on your resolved complaints!</p>
+            <a href="{% url 'my_complaints' %}" class="btn btn-primary">
+                <i class="fas fa-list"></i> View My Complaints
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

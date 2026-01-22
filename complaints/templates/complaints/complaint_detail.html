@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+
+{% block title %}Complaint #{{ complaint.id }} - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .detail-container {
+        max-width: 900px;
+        margin: 30px auto;
+    }
+    
+    .detail-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .detail-header {
+        background: linear-gradient(135deg, #2563a8 0%, #1e4f8a 100%);
+        color: white;
+        padding: 30px;
+    }
+    
+    .detail-body {
+        padding: 40px;
+    }
+    
+    .info-row {
+        padding: 15px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #6b7280;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+    
+    .info-value {
+        color: #1f2937;
+        font-size: 1.1rem;
+    }
+    
+    .status-badge-large {
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: inline-block;
+    }
+    
+    .status-pending-large {
+        background-color: #fef3c7;
+        color: #92400e;
+        border: 3px solid #fbbf24;
+    }
+    
+    .status-progress-large {
+        background-color: #dbeafe;
+        color: #1e40af;
+        border: 3px solid #3b82f6;
+    }
+    
+    .status-resolved-large {
+        background-color: #d1fae5;
+        color: #065f46;
+        border: 3px solid #10b981;
+    }
+    
+    .complaint-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-top: 15px;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+        margin-top: 30px;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: #e5e7eb;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 20px;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -36px;
+        top: 5px;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: #2563a8;
+        border: 3px solid white;
+        box-shadow: 0 0 0 3px #2563a8;
+    }
+    
+    .timeline-date {
+        font-size: 0.9rem;
+        color: #6b7280;
+        font-weight: 600;
+    }
+    
+    .timeline-content {
+        margin-top: 5px;
+        color: #1f2937;
+    }
+</style>
+
+<div class="detail-container">
+    <div class="detail-card">
+        <div class="detail-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-2">
+                        <i class="fas fa-file-alt"></i> Complaint #{{ complaint.id }}
+                    </h2>
+                    <p class="mb-0">
+                        <i class="far fa-calendar"></i> Submitted on {{ complaint.created_at|date:"F d, Y - h:i A" }}
+                    </p>
+                </div>
+                <div>
+                    {% if complaint.status == 'Pending' %}
+                        <span class="status-badge-large status-pending-large">
+                            <i class="fas fa-clock"></i> Pending
+                        </span>
+                    {% elif complaint.status == 'In Progress' %}
+                        <span class="status-badge-large status-progress-large">
+                            <i class="fas fa-spinner"></i> In Progress
+                        </span>
+                    {% else %}
+                        <span class="status-badge-large status-resolved-large">
+                            <i class="fas fa-check-circle"></i> Resolved
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="detail-body">
+            <!-- Complaint Information -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-list"></i> Category
+                        </div>
+                        <div class="info-value">
+                            {% if complaint.category == 'Road Maintenance' %}🛣️
+                            {% elif complaint.category == 'Street Light' %}💡
+                            {% elif complaint.category == 'Water Supply' %}💧
+                            {% elif complaint.category == 'Sanitation' %}🗑️
+                            {% elif complaint.category == 'Traffic' %}🚦
+                            {% elif complaint.category == 'Parks' %}🌳
+                            {% else %}📌{% endif %}
+                            {{ complaint.category }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="info-row">
+                        <div class="info-label">
+                            <i class="fas fa-map-marked-alt"></i> Ward Number
+                        </div>
+                        <div class="info-value">
+                            <span class="badge bg-primary" style="font-size: 1.1rem; padding: 8px 16px;">
+                                Ward {{ complaint.ward }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-row mt-3">
+                <div class="info-label">
+                    <i class="fas fa-align-left"></i> Description
+                </div>
+                <div class="info-value">
+                    <p style="line-height: 1.8; margin: 0;">{{ complaint.description }}</p>
+                </div>
+            </div>
+            
+            {% if complaint.image %}
+            <div class="info-row">
+                <div class="info-label">
+                    <i class="fas fa-image"></i> Attached Image
+                </div>
+                <div class="info-value">
+                    <img src="{{ complaint.image.url }}" alt="Complaint Image" class="complaint-image">
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Timeline -->
+            <div class="mt-5">
+                <h5 class="mb-3">
+                    <i class="fas fa-history"></i> Complaint Timeline
+                </h5>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            {{ complaint.created_at|date:"M d, Y - h:i A" }}
+                        </div>
+                        <div class="timeline-content">
+                            <strong>Complaint Submitted</strong><br>
+                            Your complaint was successfully submitted to Mechinagar Municipality.
+                        </div>
+                    </div>
+                    
+                    {% if complaint.status == 'In Progress' or complaint.status == 'Resolved' %}
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            {{ complaint.updated_at|date:"M d, Y - h:i A" }}
+                        </div>
+                        <div class="timeline-content">
+                            <strong>Status Updated to In Progress</strong><br>
+                            Municipality officials are working on resolving your complaint.
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if complaint.status == 'Resolved' %}
+                    <div class="timeline-item">
+                        <div class="timeline-date">
+                            {{ complaint.updated_at|date:"M d, Y - h:i A" }}
+                        </div>
+                        <div class="timeline-content">
+                            <strong>Complaint Resolved</strong><br>
+                            Your complaint has been successfully resolved. Please provide feedback!
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="d-flex gap-2 mt-4 pt-4 border-top">
+                <a href="{% url 'my_complaints' %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to My Complaints
+                </a>
+                
+                {% if complaint.status == 'Resolved' %}
+                <a href="{% url 'submit_feedback' complaint.id %}" class="btn btn-warning">
+                    <i class="fas fa-star"></i> Give Feedback
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

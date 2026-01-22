@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('accounts/', include('accounts.urls')),
     path('complaints/', include('complaints.urls')),
+    path('feedback/', include('feedback.urls')),
 ]
 
 # Serve media files in development
