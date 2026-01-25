@@ -5,7 +5,7 @@ def home(request):
     # Redirect logged-in users to their dashboard
     if request.user.is_authenticated:
         if request.user.is_staff:
-            return redirect('/admin/')
+            return redirect('admin_dashboard')  # Changed from '/admin/'
         else:
             return redirect('citizen_dashboard')
     
