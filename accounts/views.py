@@ -97,7 +97,8 @@ def citizen_dashboard(request):
         resolved=Count('id', filter=Q(status='Resolved'))
     )
     
-    recent_complaints = Complaint.objects.filter(user=request.user).order_by('-created_at')[:5]
+    # Optimized with select_related to prevent N+1 queries
+    recent_complaints = Complaint.objects.filter(user=request.user).select_related('user').order_by('-created_at')[:5]
     
     context = {
         'stats': stats,

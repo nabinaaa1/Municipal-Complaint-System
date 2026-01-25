@@ -51,7 +51,8 @@ def submit_complaint(request):
 @login_required
 def my_complaints(request):
     """View user's complaints"""
-    complaints = Complaint.objects.filter(user=request.user).order_by('-created_at')
+    # Optimized with select_related to prevent N+1 queries
+    complaints = Complaint.objects.filter(user=request.user).select_related('user').order_by('-created_at')
     
     # Filter by status if provided
     status_filter = request.GET.get('status')
