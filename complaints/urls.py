@@ -12,4 +12,5 @@ urlpatterns = [
     path('admin/dashboard/', admin_views.admin_dashboard, name='admin_dashboard'),
     path('admin/list/', admin_views.admin_complaint_list, name='admin_complaint_list'),
     path('admin/detail/<int:pk>/', admin_views.admin_complaint_detail, name='admin_complaint_detail'),
+    path('admin/statistics/', admin_views.admin_statistics, name='admin_statistics'),
 ]

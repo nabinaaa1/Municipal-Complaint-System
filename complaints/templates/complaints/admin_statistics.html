@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+
+{% block title %}Statistics - Mechinagar Municipality{% endblock %}
+
+{% block content %}
+<style>
+    .stats-overview-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+        border-left: 5px solid;
+        height: 100%;
+        min-height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .stats-overview-card h6 {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+    
+    .stats-overview-card h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    
+    .stats-overview-card small {
+        font-size: 0.8rem;
+    }
+    
+    .stats-overview-card.total { border-color: #6366f1; }
+    .stats-overview-card.pending { border-color: #f59e0b; }
+    .stats-overview-card.progress { border-color: #3b82f6; }
+    .stats-overview-card.resolved { border-color: #10b981; }
+    
+    .stats-table {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    
+    .progress-bar-custom {
+        height: 25px;
+        border-radius: 5px;
+        background: #e5e7eb;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        transition: width 0.8s ease;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        height: 100%;
+        min-height: 180px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .metric-card i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    .metric-card h3 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 10px 0;
+        line-height: 1;
+    }
+    
+    .metric-card p {
+        margin: 0;
+        font-size: 1rem;
+        opacity: 0.9;
+        line-height: 1.4;
+    }
+    
+    .status-badge-lg {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>
+                <i class="fas fa-chart-bar"></i> Detailed Statistics & Analytics
+            </h2>
+            <p class="text-muted">Comprehensive complaint statistics by ward and category</p>
+        </div>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stats-overview-card total">
+                <h6 class="text-muted">Total Complaints</h6>
+                <h3 style="color: #6366f1;">{{ total_complaints }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-overview-card pending">
+                <h6 class="text-muted">Pending</h6>
+                <h3 style="color: #f59e0b;">{{ pending_complaints }}</h3>
+                <small class="text-muted">{{ pending_percentage|floatformat:1 }}% of total</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-overview-card progress">
+                <h6 class="text-muted">In Progress</h6>
+                <h3 style="color: #3b82f6;">{{ in_progress_complaints }}</h3>
+                <small class="text-muted">{{ in_progress_percentage|floatformat:1 }}% of total</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-overview-card resolved">
+                <h6 class="text-muted">Resolved</h6>
+                <h3 style="color: #10b981;">{{ resolved_complaints }}</h3>
+                <small class="text-muted">{{ resolved_percentage|floatformat:1 }}% of total</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time-based Metrics -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="metric-card">
+                <i class="fas fa-calendar-week"></i>
+                <h3>{{ last_7_days }}</h3>
+                <p>Complaints<br>(Last 7 Days)</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <i class="fas fa-calendar-alt"></i>
+                <h3>{{ last_30_days }}</h3>
+                <p>Complaints<br>(Last 30 Days)</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <i class="fas fa-percentage"></i>
+                <h3>{{ resolution_rate|floatformat:1 }}%</h3>
+                <p>Resolution Rate</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ward-wise Statistics -->
+    <div class="stats-table">
+        <h4 class="mb-4">
+            <i class="fas fa-map-marked-alt"></i> Ward-wise Detailed Statistics
+        </h4>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Ward</th>
+                        <th>Total</th>
+                        <th>Pending</th>
+                        <th>In Progress</th>
+                        <th>Resolved</th>
+                        <th>Distribution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ward in ward_statistics %}
+                    <tr>
+                        <td><strong>Ward {{ ward.ward }}</strong></td>
+                        <td><span class="badge bg-secondary">{{ ward.total }}</span></td>
+                        <td><span class="badge bg-warning text-dark">{{ ward.pending }}</span></td>
+                        <td><span class="badge bg-primary">{{ ward.in_progress }}</span></td>
+                        <td><span class="badge bg-success">{{ ward.resolved }}</span></td>
+                        <td>
+                            <div class="progress-bar-custom">
+                                <div class="progress-bar-fill" style="width: {{ ward.percentage }}%;">
+                                    {{ ward.percentage|floatformat:1 }}%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Category-wise Statistics -->
+    <div class="stats-table">
+        <h4 class="mb-4">
+            <i class="fas fa-list-alt"></i> Category-wise Detailed Statistics
+        </h4>
+        
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Category</th>
+                        <th>Total</th>
+                        <th>Pending</th>
+                        <th>In Progress</th>
+                        <th>Resolved</th>
+                        <th>Distribution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in category_statistics %}
+                    <tr>
+                        <td>
+                            <strong>
+                                {% if category.category == 'Road Maintenance' %}🛣️
+                                {% elif category.category == 'Street Light' %}💡
+                                {% elif category.category == 'Water Supply' %}💧
+                                {% elif category.category == 'Sanitation' %}🗑️
+                                {% elif category.category == 'Traffic' %}🚦
+                                {% elif category.category == 'Parks' %}🌳
+                                {% else %}📌{% endif %}
+                                {{ category.category }}
+                            </strong>
+                        </td>
+                        <td><span class="badge bg-secondary">{{ category.total }}</span></td>
+                        <td><span class="badge bg-warning text-dark">{{ category.pending }}</span></td>
+                        <td><span class="badge bg-primary">{{ category.in_progress }}</span></td>
+                        <td><span class="badge bg-success">{{ category.resolved }}</span></td>
+                        <td>
+                            <div class="progress-bar-custom">
+                                <div class="progress-bar-fill" style="width: {{ category.percentage }}%;">
+                                    {{ category.percentage|floatformat:1 }}%
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="row">
+        <div class="col-12">
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary btn-lg">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="{% url 'admin_complaint_list' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-list"></i> Manage Complaints
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Animate progress bars on load
+    window.addEventListener('load', function() {
+        const bars = document.querySelectorAll('.progress-bar-fill');
+        bars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100);
+        });
+    });
+</script>
+{% endblock %}

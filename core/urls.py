@@ -3,4 +3,5 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('set-language/', views.set_language, name='set_language'),
 ]
