@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Citizen Registration - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.citizen_registration }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -54,8 +54,8 @@
     <div class="register-card">
         <div class="register-header">
             <i class="fas fa-user-plus"></i>
-            <h2 class="mb-0">Citizen Registration</h2>
-            <p class="mb-0">Create your account to get started</p>
+            <h2 class="mb-0">{{ t.citizen_registration }}</h2>
+            <p class="mb-0">{{ t.create_account }}</p>
         </div>
         
         <div class="register-body">
@@ -73,71 +73,71 @@
                 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-user"></i> Full Name <span class="text-danger">*</span>
+                        <i class="fas fa-user"></i> {{ t.full_name }} <span class="text-danger">*</span>
                     </label>
                     <input type="text" name="fullname" class="form-control form-control-lg" 
-                           placeholder="Enter your full name" required 
+                           placeholder="{{ t.enter_your }} {{ t.full_name|lower }}" required 
                            value="{{ request.POST.fullname }}">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-envelope"></i> Email Address <span class="text-danger">*</span>
+                        <i class="fas fa-envelope"></i> {{ t.email_address }} <span class="text-danger">*</span>
                     </label>
                     <input type="email" name="email" class="form-control form-control-lg" 
-                           placeholder="Enter your email" required 
+                           placeholder="{{ t.enter_your }} {{ t.email_address|lower }}" required 
                            value="{{ request.POST.email }}">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-map-marked-alt"></i> Ward Number
+                        <i class="fas fa-map-marked-alt"></i> {{ t.ward_number }}
                     </label>
                     <select name="ward" class="form-select form-select-lg">
-                        <option value="">-- Select Ward --</option>
+                        <option value="">-- {{ t.select_ward }} --</option>
                         {% for i in "123456789012345" %}
-                            <option value="{{ forloop.counter }}">Ward {{ forloop.counter }}</option>
+                            <option value="{{ forloop.counter }}">{% if lang == 'ne' %}वडा{% else %}Ward{% endif %} {{ forloop.counter }}</option>
                         {% endfor %}
                     </select>
-                    <small class="text-muted">Select your ward (1-15)</small>
+                    <small class="text-muted">{{ t.select_your }} {{ t.ward|lower }} (1-15)</small>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-phone"></i> Phone Number
+                        <i class="fas fa-phone"></i> {{ t.phone_number }}
                     </label>
                     <input type="tel" name="phone" class="form-control form-control-lg" 
-                           placeholder="Enter your phone number" 
+                           placeholder="{{ t.enter_your }} {{ t.phone_number|lower }}" 
                            value="{{ request.POST.phone }}">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-lock"></i> Password <span class="text-danger">*</span>
+                        <i class="fas fa-lock"></i> {{ t.password }} <span class="text-danger">*</span>
                     </label>
                     <input type="password" name="password" class="form-control form-control-lg" 
-                           placeholder="Create a password (min 6 characters)" 
+                           placeholder="{% if lang == 'ne' %}पासवर्ड सिर्जना गर्नुहोस् (न्यूनतम ६ अक्षर){% else %}Create a password (min 6 characters){% endif %}" 
                            required minlength="6">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-lock"></i> Confirm Password <span class="text-danger">*</span>
+                        <i class="fas fa-lock"></i> {{ t.confirm_password }} <span class="text-danger">*</span>
                     </label>
                     <input type="password" name="confirm_password" class="form-control form-control-lg" 
-                           placeholder="Re-enter your password" required>
+                           placeholder="{% if lang == 'ne' %}आफ्नो पासवर्ड पुन: प्रविष्ट गर्नुहोस्{% else %}Re-enter your password{% endif %}" required>
                 </div>
 
                 <button type="submit" class="btn btn-register btn-lg w-100 mb-3">
-                    <i class="fas fa-user-plus"></i> Register
+                    <i class="fas fa-user-plus"></i> {{ t.register }}
                 </button>
 
                 <div class="text-center">
-                    <p class="mb-2">Already have an account? 
-                        <a href="{% url 'citizen_login' %}" class="fw-bold">Login here</a>
+                    <p class="mb-2">{{ t.already_have_account }} 
+                        <a href="{% url 'citizen_login' %}" class="fw-bold">{{ t.login_here }}</a>
                     </p>
                     <a href="{% url 'home' %}" class="text-muted text-decoration-none">
-                        <i class="fas fa-arrow-left"></i> Back to Home
+                        <i class="fas fa-arrow-left"></i> {{ t.back_to_home }}
                     </a>
                 </div>
             </form>

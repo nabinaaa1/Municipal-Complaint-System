@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Mechinagar Municipality - Complaint Management System{% endblock %}
+{% block title %}{{ t.mechinagar_municipality }} - {{ t.citizen_complaint_system }}{% endblock %}
 
 {% block content %}
 <style>
@@ -156,9 +156,9 @@
 <div class="hero-section">
     <div class="container">
         <i class="fas fa-comments" style="font-size: 4rem; margin-bottom: 1rem;"></i>
-        <h1 class="hero-title">Citizen Complaint Management System</h1>
+        <h1 class="hero-title">{{ t.citizen_complaint_system }}</h1>
         <p class="hero-subtitle">
-            Report civic issues, track complaints, and help improve our community
+            {{ t.report_civic_issues }}
         </p>
     </div>
 </div>
@@ -170,15 +170,15 @@
         <div class="col-md-5">
             <div class="access-card citizen text-center">
                 <i class="fas fa-users icon"></i>
-                <h3>For Citizens</h3>
-                <p>Submit complaints, track their status, and provide feedback on resolved issues</p>
+                <h3>{{ t.for_citizens }}</h3>
+                <p>{{ t.citizen_desc }}</p>
                 
                 <div class="d-grid gap-2">
                     <a href="{% url 'citizen_login' %}" class="btn btn-citizen">
-                        <i class="fas fa-sign-in-alt"></i> Login
+                        <i class="fas fa-sign-in-alt"></i> {{ t.login }}
                     </a>
                     <a href="{% url 'citizen_register' %}" class="btn btn-citizen-outline">
-                        <i class="fas fa-user-plus"></i> Register
+                        <i class="fas fa-user-plus"></i> {{ t.register }}
                     </a>
                 </div>
             </div>
@@ -188,12 +188,12 @@
         <div class="col-md-5">
             <div class="access-card admin text-center">
                 <i class="fas fa-user-shield icon"></i>
-                <h3>For Administrators</h3>
-                <p>Manage complaints, view feedback, and monitor system statistics</p>
+                <h3>{{ t.for_administrators }}</h3>
+                <p>{{ t.admin_desc }}</p>
                 
                 <div class="d-grid gap-2">
                     <a href="/admin/" class="btn btn-admin">
-                        <i class="fas fa-lock"></i> Admin Login
+                        <i class="fas fa-lock"></i> {% if lang == 'ne' %}प्रशासक लगइन{% else %}Admin Login{% endif %}
                     </a>
                     <div style="height: 48px;"></div>
                 </div>
@@ -206,40 +206,40 @@
 <div class="feature-section">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 style="color: #2c3e50; font-weight: 700;">System Features</h2>
-            <p style="color: #555;">Efficient complaint management for better governance</p>
+            <h2 style="color: #2c3e50; font-weight: 700;">{{ t.system_features }}</h2>
+            <p style="color: #555;">{{ t.efficient_complaint_management }}</p>
         </div>
         
         <div class="row g-4">
             <div class="col-md-3">
                 <div class="feature-box">
                     <i class="fas fa-plus-circle"></i>
-                    <h4>Submit Complaints</h4>
-                    <p>Easy-to-use interface for reporting civic issues with photo evidence</p>
+                    <h4>{{ t.submit_complaints_feature }}</h4>
+                    <p>{{ t.submit_complaints_desc }}</p>
                 </div>
             </div>
             
             <div class="col-md-3">
                 <div class="feature-box">
                     <i class="fas fa-map-marked-alt"></i>
-                    <h4>Ward Selection</h4>
-                    <p>Select your ward (1-15) for better tracking and management</p>
+                    <h4>{{ t.ward_selection_feature }}</h4>
+                    <p>{{ t.ward_selection_desc }}</p>
                 </div>
             </div>
             
             <div class="col-md-3">
                 <div class="feature-box">
                     <i class="fas fa-tasks"></i>
-                    <h4>Track Status</h4>
-                    <p>Real-time tracking of complaint status from pending to resolved</p>
+                    <h4>{{ t.track_status_feature }}</h4>
+                    <p>{{ t.track_status_desc }}</p>
                 </div>
             </div>
             
             <div class="col-md-3">
                 <div class="feature-box">
                     <i class="fas fa-star"></i>
-                    <h4>Give Feedback</h4>
-                    <p>Rate and review the resolution process to improve services</p>
+                    <h4>{{ t.give_feedback_feature }}</h4>
+                    <p>{{ t.give_feedback_desc }}</p>
                 </div>
             </div>
         </div>

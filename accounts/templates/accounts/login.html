@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Citizen Login - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.citizen_login }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -55,8 +55,8 @@
     <div class="login-card">
         <div class="login-header">
             <i class="fas fa-user-circle"></i>
-            <h2 class="mb-0">Citizen Login</h2>
-            <p class="mb-0">Welcome back! Please login to your account</p>
+            <h2 class="mb-0">{{ t.citizen_login }}</h2>
+            <p class="mb-0">{{ t.welcome_back }}</p>
         </div>
         
         <div class="login-body">
@@ -74,31 +74,31 @@
                 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-envelope"></i> Email Address
+                        <i class="fas fa-envelope"></i> {{ t.email_address }}
                     </label>
                     <input type="email" name="email" class="form-control form-control-lg" 
-                           placeholder="Enter your email" required 
+                           placeholder="{{ t.enter_your }} {{ t.email_address|lower }}" required 
                            value="{{ request.POST.email }}">
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-lock"></i> Password
+                        <i class="fas fa-lock"></i> {{ t.password }}
                     </label>
                     <input type="password" name="password" class="form-control form-control-lg" 
-                           placeholder="Enter your password" required>
+                           placeholder="{{ t.enter_your }} {{ t.password|lower }}" required>
                 </div>
 
                 <button type="submit" class="btn btn-login btn-lg w-100 mb-3">
-                    <i class="fas fa-sign-in-alt"></i> Login
+                    <i class="fas fa-sign-in-alt"></i> {{ t.login }}
                 </button>
 
                 <div class="text-center">
-                    <p class="mb-2">Don't have an account? 
-                        <a href="{% url 'citizen_register' %}" class="fw-bold">Register here</a>
+                    <p class="mb-2">{{ t.dont_have_account }} 
+                        <a href="{% url 'citizen_register' %}" class="fw-bold">{{ t.register_here }}</a>
                     </p>
                     <a href="{% url 'home' %}" class="text-muted text-decoration-none">
-                        <i class="fas fa-arrow-left"></i> Back to Home
+                        <i class="fas fa-arrow-left"></i> {{ t.back_to_home }}
                     </a>
                 </div>
             </form>
