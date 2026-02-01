@@ -1,10 +1,11 @@
 """
-Translation utility for English and Nepali language support
+COMPLETE Translation utility for English and Nepali language support
+Updated with ALL translations needed for the entire system
 """
 
 TRANSLATIONS = {
     'en': {
-        # Common
+        # ============ COMMON WORDS ============
         'welcome': 'Welcome',
         'dashboard': 'Dashboard',
         'logout': 'Logout',
@@ -25,13 +26,22 @@ TRANSLATIONS = {
         'yes': 'Yes',
         'no': 'No',
         'all': 'All',
+        'name': 'Name',
+        'email': 'Email',
+        'phone': 'Phone',
+        'action': 'Action',
+        'actions': 'Actions',
+        'details': 'Details',
+        'information': 'Information',
+        'address': 'Address',
+        'id': 'ID',
         
-        # Header
+        # ============ HEADER ============
         'mechinagar_municipality': 'Mechinagar Municipality, Office of The Municipal Executive',
         'koshi_province': 'Koshi Province, Government of Nepal',
         'complaint_system': 'Complaint System',
         
-        # Navigation
+        # ============ NAVIGATION ============
         'manage_complaints': 'Manage Complaints',
         'statistics': 'Statistics',
         'admin_panel': 'Admin Panel',
@@ -39,7 +49,7 @@ TRANSLATIONS = {
         'my_complaints': 'My Complaints',
         'my_feedback': 'My Feedback',
         
-        # Home Page
+        # ============ HOME PAGE ============
         'citizen_complaint_system': 'Citizen Complaint Management System',
         'report_civic_issues': 'Report civic issues, track complaints, and help improve our community',
         'for_citizens': 'For Citizens',
@@ -57,7 +67,7 @@ TRANSLATIONS = {
         'give_feedback_feature': 'Give Feedback',
         'give_feedback_desc': 'Rate and review the resolution process to improve services',
         
-        # Auth
+        # ============ AUTHENTICATION ============
         'citizen_login': 'Citizen Login',
         'citizen_registration': 'Citizen Registration',
         'welcome_back': 'Welcome back! Please login to your account',
@@ -76,7 +86,7 @@ TRANSLATIONS = {
         'register_here': 'Register here',
         'back_to_home': 'Back to Home',
         
-        # Dashboard
+        # ============ DASHBOARD ============
         'welcome_user': 'Welcome',
         'pending': 'Pending',
         'in_progress': 'In Progress',
@@ -84,7 +94,7 @@ TRANSLATIONS = {
         'recent_complaints': 'Recent Complaints',
         'no_complaints_yet': 'No complaints yet. Submit your first complaint!',
         
-        # Complaints
+        # ============ COMPLAINTS ============
         'submit_new_complaint': 'Submit New Complaint',
         'report_civic_issues_ward': 'Report civic issues in your ward',
         'category': 'Category',
@@ -110,8 +120,12 @@ TRANSLATIONS = {
         'attached_image': 'Attached Image',
         'created': 'Created',
         'updated': 'Updated',
+        'submitted_on': 'Submitted on',
+        'submitted': 'Submitted',
+        'your_complaint_id': 'Your complaint ID is',
+        'complaint_successfully_submitted': 'Complaint submitted successfully!',
         
-        # Categories
+        # ============ CATEGORIES ============
         'road_maintenance': 'Road Maintenance',
         'street_light': 'Street Light',
         'water_supply': 'Water Supply',
@@ -120,7 +134,7 @@ TRANSLATIONS = {
         'parks': 'Parks & Recreation',
         'other': 'Other',
         
-        # Feedback
+        # ============ FEEDBACK ============
         'give_feedback': 'Give Feedback',
         'rate_experience': 'Rate your experience with complaint resolution',
         'your_feedback': 'Your Feedback',
@@ -130,8 +144,19 @@ TRANSLATIONS = {
         'no_feedback_yet': 'No Feedback Yet',
         'feedback_desc': "You haven't submitted any feedback yet. Give feedback on your resolved complaints!",
         'resolution_rate': 'Resolution Rate',
+        'rating': 'Rating',
+        'message': 'Message',
+        'feedback_message': 'Feedback Message',
+        'click_stars_to_rate': 'Click on stars to rate',
+        'poor': 'Poor',
+        'excellent': 'Excellent',
+        'share_your_experience': 'Please share your experience',
+        'thank_you_feedback': 'Thank you for your feedback!',
+        'you_rated': 'You rated',
+        'stars': 'stars',
+        'all_feedback': 'All feedback you\'ve submitted for resolved complaints',
         
-        # Admin
+        # ============ ADMIN ============
         'admin_dashboard': 'Admin Dashboard',
         'overview_statistics': 'Overview of all complaints and statistics',
         'total_complaints': 'Total Complaints',
@@ -158,18 +183,79 @@ TRANSLATIONS = {
         'change_status': 'Change Status',
         'back_to_dashboard': 'Back to Dashboard',
         'back_to_list': 'Back to List',
+        'admin_view': 'Admin View',
+        'complaint_info': 'Complaint Info',
+        'timestamps': 'Timestamps',
+        'status_updated': 'Status updated from',
+        'to': 'to',
+        'view_complaint': 'View Complaint',
         
-        # Messages
+        # ============ MESSAGES ============
         'of_total': 'of total',
         'min_characters': 'minimum characters',
-        'max_size': 'Max size',
+        'max_size': 'Max',
         'allowed_formats': 'Allowed',
         'enter_your': 'Enter your',
         'select_your': 'Select your',
+        'minimum': 'Minimum',
+        'maximum': 'Maximum',
+        'characters_required': 'characters required',
+        'must_not_exceed': 'must not exceed',
+        'are_you_sure': 'Are you sure you want to logout?',
+        'will_be_redirected': 'You will be redirected to the home page',
+        'all_rights_reserved': 'All rights reserved',
+        
+        # ============ STATUS & LABELS ============
+        'pending_complaints': 'Pending Complaints',
+        'in_progress_complaints': 'In Progress Complaints',
+        'resolved_complaints': 'Resolved Complaints',
+        'complaint_was_submitted': 'Complaint was successfully submitted to Mechinagar Municipality',
+        'status_updated_to_progress': 'Status Updated to In Progress',
+        'officials_working': 'Municipality officials are working on resolving your complaint',
+        'complaint_resolved': 'Complaint Resolved',
+        'successfully_resolved': 'Your complaint has been successfully resolved. Please provide feedback!',
+        'provide_feedback': 'Please provide feedback',
+        'registered_ward': 'Your registered ward',
+        
+        # ============ FORMS & PLACEHOLDERS ============
+        'enter_email': 'Enter your email address',
+        'enter_password': 'Enter your password',
+        'enter_full_name': 'Enter your full name',
+        'enter_phone': 'Enter your phone number',
+        'describe_complaint': 'Describe your complaint in detail...',
+        'select_category_placeholder': '-- Select Category --',
+        'select_ward_placeholder': '-- Select Ward --',
+        're_enter_password': 'Re-enter your password',
+        'create_password': 'Create a password',
+        
+        # ============ BUTTONS ============
+        'submit_now': 'Submit Now',
+        'update_now': 'Update Now',
+        'view_details': 'View Details',
+        'back_to_complaints': 'Back to My Complaints',
+        
+        # ============ TABLE HEADERS ============
+        'sl_no': 'S.N.',
+        'complaint_number': 'Complaint #',
+        'citizen_name': 'Citizen Name',
+        'ward_no': 'Ward No.',
+        'category_type': 'Category',
+        'status_label': 'Status',
+        'date_submitted': 'Date Submitted',
+        'action_buttons': 'Action',
+        
+        # ============ VALIDATION & ERRORS ============
+        'field_required': 'This field is required',
+        'invalid_email': 'Please enter a valid email address',
+        'password_mismatch': 'Passwords do not match',
+        'min_6_characters': 'Password must be at least 6 characters',
+        'min_10_characters': 'Minimum 10 characters required',
+        'max_5mb': 'Maximum file size is 5MB',
+        'image_formats': 'Only JPG, JPEG, PNG, and GIF images are allowed',
     },
     
     'ne': {
-        # Common
+        # ============ COMMON WORDS ============
         'welcome': 'स्वागत छ',
         'dashboard': 'ड्यासबोर्ड',
         'logout': 'लग आउट',
@@ -190,13 +276,22 @@ TRANSLATIONS = {
         'yes': 'हो',
         'no': 'होइन',
         'all': 'सबै',
+        'name': 'नाम',
+        'email': 'इमेल',
+        'phone': 'फोन',
+        'action': 'कार्य',
+        'actions': 'कार्यहरू',
+        'details': 'विवरण',
+        'information': 'जानकारी',
+        'address': 'ठेगाना',
+        'id': 'आईडी',
         
-        # Header
+        # ============ HEADER ============
         'mechinagar_municipality': 'मेचीनगर नगरपालिका, नगर कार्यपालिकाको कार्यालय',
         'koshi_province': 'कोशी प्रदेश, नेपाल सरकार',
         'complaint_system': 'गुनासो प्रणाली',
         
-        # Navigation
+        # ============ NAVIGATION ============
         'manage_complaints': 'गुनासो व्यवस्थापन',
         'statistics': 'तथ्याङ्क',
         'admin_panel': 'प्रशासन प्यानल',
@@ -204,7 +299,7 @@ TRANSLATIONS = {
         'my_complaints': 'मेरो गुनासोहरू',
         'my_feedback': 'मेरो प्रतिक्रिया',
         
-        # Home Page
+        # ============ HOME PAGE ============
         'citizen_complaint_system': 'नागरिक गुनासो व्यवस्थापन प्रणाली',
         'report_civic_issues': 'नागरिक समस्याहरू रिपोर्ट गर्नुहोस्, गुनासोहरू ट्र्याक गर्नुहोस्, र हाम्रो समुदाय सुधार गर्न मद्दत गर्नुहोस्',
         'for_citizens': 'नागरिकहरूको लागि',
@@ -222,7 +317,7 @@ TRANSLATIONS = {
         'give_feedback_feature': 'प्रतिक्रिया दिनुहोस्',
         'give_feedback_desc': 'सेवाहरू सुधार गर्न समाधान प्रक्रियालाई मूल्याङ्कन र समीक्षा गर्नुहोस्',
         
-        # Auth
+        # ============ AUTHENTICATION ============
         'citizen_login': 'नागरिक लगइन',
         'citizen_registration': 'नागरिक दर्ता',
         'welcome_back': 'फेरि स्वागत छ! कृपया आफ्नो खातामा लगइन गर्नुहोस्',
@@ -241,7 +336,7 @@ TRANSLATIONS = {
         'register_here': 'यहाँ दर्ता गर्नुहोस्',
         'back_to_home': 'गृहपृष्ठमा फर्कनुहोस्',
         
-        # Dashboard
+        # ============ DASHBOARD ============
         'welcome_user': 'स्वागत छ',
         'pending': 'पेन्डिङ',
         'in_progress': 'प्रगतिमा',
@@ -249,7 +344,7 @@ TRANSLATIONS = {
         'recent_complaints': 'हालैका गुनासोहरू',
         'no_complaints_yet': 'अहिलेसम्म कुनै गुनासो छैन। आफ्नो पहिलो गुनासो पेश गर्नुहोस्!',
         
-        # Complaints
+        # ============ COMPLAINTS ============
         'submit_new_complaint': 'नयाँ गुनासो पेश गर्नुहोस्',
         'report_civic_issues_ward': 'आफ्नो वडामा नागरिक समस्याहरू रिपोर्ट गर्नुहोस्',
         'category': 'श्रेणी',
@@ -275,8 +370,12 @@ TRANSLATIONS = {
         'attached_image': 'संलग्न तस्बिर',
         'created': 'सिर्जना गरियो',
         'updated': 'अद्यावधिक गरियो',
+        'submitted_on': 'मा पेश गरिएको',
+        'submitted': 'पेश गरियो',
+        'your_complaint_id': 'तपाईंको गुनासो आईडी',
+        'complaint_successfully_submitted': 'गुनासो सफलतापूर्वक पेश गरियो!',
         
-        # Categories
+        # ============ CATEGORIES ============
         'road_maintenance': 'सडक मर्मत',
         'street_light': 'सडक बत्ती',
         'water_supply': 'खानेपानी आपूर्ति',
@@ -285,7 +384,7 @@ TRANSLATIONS = {
         'parks': 'पार्क र मनोरञ्जन',
         'other': 'अन्य',
         
-        # Feedback
+        # ============ FEEDBACK ============
         'give_feedback': 'प्रतिक्रिया दिनुहोस्',
         'rate_experience': 'गुनासो समाधानसँग तपाईंको अनुभव मूल्याङ्कन गर्नुहोस्',
         'your_feedback': 'तपाईंको प्रतिक्रिया',
@@ -295,8 +394,19 @@ TRANSLATIONS = {
         'no_feedback_yet': 'अहिलेसम्म कुनै प्रतिक्रिया छैन',
         'feedback_desc': 'तपाईंले अझै कुनै प्रतिक्रिया पेश गर्नुभएको छैन। समाधान भएका गुनासोहरूमा प्रतिक्रिया दिनुहोस्!',
         'resolution_rate': 'समाधान दर',
+        'rating': 'मूल्याङ्कन',
+        'message': 'सन्देश',
+        'feedback_message': 'प्रतिक्रिया सन्देश',
+        'click_stars_to_rate': 'मूल्याङ्कन गर्न ताराहरूमा क्लिक गर्नुहोस्',
+        'poor': 'खराब',
+        'excellent': 'उत्कृष्ट',
+        'share_your_experience': 'कृपया आफ्नो अनुभव साझा गर्नुहोस्',
+        'thank_you_feedback': 'तपाईंको प्रतिक्रियाको लागि धन्यवाद!',
+        'you_rated': 'तपाईंले मूल्याङ्कन गर्नुभयो',
+        'stars': 'तारा',
+        'all_feedback': 'समाधान भएका गुनासोहरूमा तपाईंले पेश गर्नुभएको सबै प्रतिक्रिया',
         
-        # Admin
+        # ============ ADMIN ============
         'admin_dashboard': 'प्रशासक ड्यासबोर्ड',
         'overview_statistics': 'सबै गुनासोहरू र तथ्याङ्कहरूको अवलोकन',
         'total_complaints': 'कुल गुनासोहरू',
@@ -323,14 +433,75 @@ TRANSLATIONS = {
         'change_status': 'स्थिति परिवर्तन गर्नुहोस्',
         'back_to_dashboard': 'ड्यासबोर्डमा फर्कनुहोस्',
         'back_to_list': 'सूचीमा फर्कनुहोस्',
+        'admin_view': 'प्रशासक दृश्य',
+        'complaint_info': 'गुनासो जानकारी',
+        'timestamps': 'समय टिकटहरू',
+        'status_updated': 'स्थिति अद्यावधिक गरियो',
+        'to': 'बाट',
+        'view_complaint': 'गुनासो हेर्नुहोस्',
         
-        # Messages
+        # ============ MESSAGES ============
         'of_total': 'कुलको',
         'min_characters': 'न्यूनतम अक्षरहरू',
-        'max_size': 'अधिकतम आकार',
+        'max_size': 'अधिकतम',
         'allowed_formats': 'अनुमति',
         'enter_your': 'तपाईंको प्रविष्ट गर्नुहोस्',
         'select_your': 'तपाईंको चयन गर्नुहोस्',
+        'minimum': 'न्यूनतम',
+        'maximum': 'अधिकतम',
+        'characters_required': 'अक्षरहरू आवश्यक',
+        'must_not_exceed': 'भन्दा बढी हुनु हुँदैन',
+        'are_you_sure': 'के तपाईं लग आउट गर्न निश्चित हुनुहुन्छ?',
+        'will_be_redirected': 'तपाईंलाई गृहपृष्ठमा पुनर्निर्देशित गरिनेछ',
+        'all_rights_reserved': 'सर्वाधिकार सुरक्षित',
+        
+        # ============ STATUS & LABELS ============
+        'pending_complaints': 'पेन्डिङ गुनासोहरू',
+        'in_progress_complaints': 'प्रगतिमा गुनासोहरू',
+        'resolved_complaints': 'समाधान भएका गुनासोहरू',
+        'complaint_was_submitted': 'गुनासो सफलतापूर्वक मेचीनगर नगरपालिकामा पेश गरियो',
+        'status_updated_to_progress': 'स्थिति प्रगतिमा अद्यावधिक गरियो',
+        'officials_working': 'नगरपालिकाका अधिकारीहरू तपाईंको गुनासो समाधान गर्न काम गरिरहेका छन्',
+        'complaint_resolved': 'गुनासो समाधान भयो',
+        'successfully_resolved': 'तपाईंको गुनासो सफलतापूर्वक समाधान भएको छ। कृपया प्रतिक्रिया दिनुहोस्!',
+        'provide_feedback': 'कृपया प्रतिक्रिया दिनुहोस्',
+        'registered_ward': 'तपाईंको दर्ता वडा',
+        
+        # ============ FORMS & PLACEHOLDERS ============
+        'enter_email': 'आफ्नो इमेल ठेगाना प्रविष्ट गर्नुहोस्',
+        'enter_password': 'आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्',
+        'enter_full_name': 'आफ्नो पूरा नाम प्रविष्ट गर्नुहोस्',
+        'enter_phone': 'आफ्नो फोन नम्बर प्रविष्ट गर्नुहोस्',
+        'describe_complaint': 'आफ्नो गुनासो विस्तृत रूपमा वर्णन गर्नुहोस्...',
+        'select_category_placeholder': '-- श्रेणी चयन गर्नुहोस् --',
+        'select_ward_placeholder': '-- वडा चयन गर्नुहोस् --',
+        're_enter_password': 'आफ्नो पासवर्ड पुन: प्रविष्ट गर्नुहोस्',
+        'create_password': 'पासवर्ड सिर्जना गर्नुहोस्',
+        
+        # ============ BUTTONS ============
+        'submit_now': 'अहिले पेश गर्नुहोस्',
+        'update_now': 'अहिले अद्यावधिक गर्नुहोस्',
+        'view_details': 'विवरण हेर्नुहोस्',
+        'back_to_complaints': 'मेरो गुनासोहरूमा फर्कनुहोस्',
+        
+        # ============ TABLE HEADERS ============
+        'sl_no': 'क्र.सं.',
+        'complaint_number': 'गुनासो नं.',
+        'citizen_name': 'नागरिकको नाम',
+        'ward_no': 'वडा नं.',
+        'category_type': 'श्रेणी',
+        'status_label': 'स्थिति',
+        'date_submitted': 'पेश गरिएको मिति',
+        'action_buttons': 'कार्य',
+        
+        # ============ VALIDATION & ERRORS ============
+        'field_required': 'यो क्षेत्र आवश्यक छ',
+        'invalid_email': 'कृपया मान्य इमेल ठेगाना प्रविष्ट गर्नुहोस्',
+        'password_mismatch': 'पासवर्डहरू मेल खाँदैनन्',
+        'min_6_characters': 'पासवर्ड कम्तिमा ६ अक्षरको हुनुपर्छ',
+        'min_10_characters': 'न्यूनतम १० अक्षर आवश्यक',
+        'max_5mb': 'अधिकतम फाइल आकार ५एमबी हो',
+        'image_formats': 'केवल JPG, JPEG, PNG, र GIF तस्बिरहरू अनुमति छ',
     }
 }
 

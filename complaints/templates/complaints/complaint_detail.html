@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Complaint #{{ complaint.id }} - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.complaint }} #{{ complaint.id }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -134,24 +134,24 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="mb-2">
-                        <i class="fas fa-file-alt"></i> Complaint #{{ complaint.id }}
+                        <i class="fas fa-file-alt"></i> {{ t.complaint }} #{{ complaint.id }}
                     </h2>
                     <p class="mb-0">
-                        <i class="far fa-calendar"></i> Submitted on {{ complaint.created_at|date:"F d, Y - h:i A" }}
+                        <i class="far fa-calendar"></i> {{ t.submitted_on }} {{ complaint.created_at|date:"F d, Y - h:i A" }}
                     </p>
                 </div>
                 <div>
                     {% if complaint.status == 'Pending' %}
                         <span class="status-badge-large status-pending-large">
-                            <i class="fas fa-clock"></i> Pending
+                            <i class="fas fa-clock"></i> {{ t.pending }}
                         </span>
                     {% elif complaint.status == 'In Progress' %}
                         <span class="status-badge-large status-progress-large">
-                            <i class="fas fa-spinner"></i> In Progress
+                            <i class="fas fa-spinner"></i> {{ t.in_progress }}
                         </span>
                     {% else %}
                         <span class="status-badge-large status-resolved-large">
-                            <i class="fas fa-check-circle"></i> Resolved
+                            <i class="fas fa-check-circle"></i> {{ t.resolved }}
                         </span>
                     {% endif %}
                 </div>
@@ -164,17 +164,16 @@
                 <div class="col-md-6">
                     <div class="info-row">
                         <div class="info-label">
-                            <i class="fas fa-list"></i> Category
+                            <i class="fas fa-list"></i> {{ t.category }}
                         </div>
                         <div class="info-value">
-                            {% if complaint.category == 'Road Maintenance' %}🛣️
-                            {% elif complaint.category == 'Street Light' %}💡
-                            {% elif complaint.category == 'Water Supply' %}💧
-                            {% elif complaint.category == 'Sanitation' %}🗑️
-                            {% elif complaint.category == 'Traffic' %}🚦
-                            {% elif complaint.category == 'Parks' %}🌳
-                            {% else %}📌{% endif %}
-                            {{ complaint.category }}
+                            {% if complaint.category == 'Road Maintenance' %}🛣️ {{ t.road_maintenance }}
+                            {% elif complaint.category == 'Street Light' %}💡 {{ t.street_light }}
+                            {% elif complaint.category == 'Water Supply' %}💧 {{ t.water_supply }}
+                            {% elif complaint.category == 'Sanitation' %}🗑️ {{ t.sanitation }}
+                            {% elif complaint.category == 'Traffic' %}🚦 {{ t.traffic }}
+                            {% elif complaint.category == 'Parks' %}🌳 {{ t.parks }}
+                            {% else %}📌 {{ t.other }}{% endif %}
                         </div>
                     </div>
                 </div>
@@ -182,11 +181,11 @@
                 <div class="col-md-6">
                     <div class="info-row">
                         <div class="info-label">
-                            <i class="fas fa-map-marked-alt"></i> Ward Number
+                            <i class="fas fa-map-marked-alt"></i> {{ t.ward_number }}
                         </div>
                         <div class="info-value">
                             <span class="badge bg-primary" style="font-size: 1.1rem; padding: 8px 16px;">
-                                Ward {{ complaint.ward }}
+                                {{ t.ward }} {{ complaint.ward }}
                             </span>
                         </div>
                     </div>
@@ -195,7 +194,7 @@
             
             <div class="info-row mt-3">
                 <div class="info-label">
-                    <i class="fas fa-align-left"></i> Description
+                    <i class="fas fa-align-left"></i> {{ t.description }}
                 </div>
                 <div class="info-value">
                     <p style="line-height: 1.8; margin: 0;">{{ complaint.description }}</p>
@@ -205,10 +204,10 @@
             {% if complaint.image %}
             <div class="info-row">
                 <div class="info-label">
-                    <i class="fas fa-image"></i> Attached Image
+                    <i class="fas fa-image"></i> {{ t.attached_image }}
                 </div>
                 <div class="info-value">
-                    <img src="{{ complaint.image.url }}" alt="Complaint Image" class="complaint-image">
+                    <img src="{{ complaint.image.url }}" alt="{{ t.attached_image }}" class="complaint-image">
                 </div>
             </div>
             {% endif %}
@@ -216,7 +215,7 @@
             <!-- Timeline -->
             <div class="mt-5">
                 <h5 class="mb-3">
-                    <i class="fas fa-history"></i> Complaint Timeline
+                    <i class="fas fa-history"></i> {{ t.complaint_timeline }}
                 </h5>
                 <div class="timeline">
                     <div class="timeline-item">
@@ -224,8 +223,8 @@
                             {{ complaint.created_at|date:"M d, Y - h:i A" }}
                         </div>
                         <div class="timeline-content">
-                            <strong>Complaint Submitted</strong><br>
-                            Your complaint was successfully submitted to Mechinagar Municipality.
+                            <strong>{{ t.complaint_submitted }}</strong><br>
+                            {{ t.complaint_was_submitted }}
                         </div>
                     </div>
                     
@@ -235,8 +234,8 @@
                             {{ complaint.updated_at|date:"M d, Y - h:i A" }}
                         </div>
                         <div class="timeline-content">
-                            <strong>Status Updated to In Progress</strong><br>
-                            Municipality officials are working on resolving your complaint.
+                            <strong>{{ t.status_updated_to_progress }}</strong><br>
+                            {{ t.officials_working }}
                         </div>
                     </div>
                     {% endif %}
@@ -247,8 +246,8 @@
                             {{ complaint.updated_at|date:"M d, Y - h:i A" }}
                         </div>
                         <div class="timeline-content">
-                            <strong>Complaint Resolved</strong><br>
-                            Your complaint has been successfully resolved. Please provide feedback!
+                            <strong>{{ t.complaint_resolved }}</strong><br>
+                            {{ t.successfully_resolved }}
                         </div>
                     </div>
                     {% endif %}
@@ -258,12 +257,12 @@
             <!-- Action Buttons -->
             <div class="d-flex gap-2 mt-4 pt-4 border-top">
                 <a href="{% url 'my_complaints' %}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to My Complaints
+                    <i class="fas fa-arrow-left"></i> {{ t.back_to_complaints }}
                 </a>
                 
                 {% if complaint.status == 'Resolved' %}
                 <a href="{% url 'submit_feedback' complaint.id %}" class="btn btn-warning">
-                    <i class="fas fa-star"></i> Give Feedback
+                    <i class="fas fa-star"></i> {{ t.give_feedback }}
                 </a>
                 {% endif %}
             </div>

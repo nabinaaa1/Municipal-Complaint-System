@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Submit Complaint - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.submit_complaint }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -80,8 +80,8 @@
     <div class="complaint-card">
         <div class="complaint-header">
             <i class="fas fa-plus-circle"></i>
-            <h2 class="mb-0">Submit New Complaint</h2>
-            <p class="mb-0">Report civic issues in your ward</p>
+            <h2 class="mb-0">{{ t.submit_new_complaint }}</h2>
+            <p class="mb-0">{{ t.report_civic_issues_ward }}</p>
         </div>
         
         <div class="complaint-body">
@@ -100,35 +100,35 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">
-                            <i class="fas fa-list"></i> Category <span class="text-danger">*</span>
+                            <i class="fas fa-list"></i> {{ t.category }} <span class="text-danger">*</span>
                         </label>
                         <select name="category" class="form-select form-select-lg" required>
-                            <option value="">-- Select Category --</option>
-                            <option value="Road Maintenance">🛣️ Road Maintenance</option>
-                            <option value="Street Light">💡 Street Light</option>
-                            <option value="Water Supply">💧 Water Supply</option>
-                            <option value="Sanitation">🗑️ Sanitation</option>
-                            <option value="Traffic">🚦 Traffic</option>
-                            <option value="Parks">🌳 Parks & Recreation</option>
-                            <option value="Other">📌 Other</option>
+                            <option value="">{{ t.select_category_placeholder }}</option>
+                            <option value="Road Maintenance">🛣️ {{ t.road_maintenance }}</option>
+                            <option value="Street Light">💡 {{ t.street_light }}</option>
+                            <option value="Water Supply">💧 {{ t.water_supply }}</option>
+                            <option value="Sanitation">🗑️ {{ t.sanitation }}</option>
+                            <option value="Traffic">🚦 {{ t.traffic }}</option>
+                            <option value="Parks">🌳 {{ t.parks }}</option>
+                            <option value="Other">📌 {{ t.other }}</option>
                         </select>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">
-                            <i class="fas fa-map-marked-alt"></i> Ward Number <span class="text-danger">*</span>
+                            <i class="fas fa-map-marked-alt"></i> {{ t.ward_number }} <span class="text-danger">*</span>
                         </label>
                         <select name="ward" class="form-select form-select-lg" required>
-                            <option value="">-- Select Ward --</option>
+                            <option value="">{{ t.select_ward_placeholder }}</option>
                             {% for i in "123456789012345" %}
                                 <option value="{{ forloop.counter }}" {% if user.ward == forloop.counter|stringformat:"s" %}selected{% endif %}>
-                                    Ward {{ forloop.counter }}
+                                    {{ t.ward }} {{ forloop.counter }}
                                 </option>
                             {% endfor %}
                         </select>
                         <small class="text-muted">
                             {% if user.ward %}
-                                Your registered ward: <strong>Ward {{ user.ward }}</strong>
+                                {{ t.registered_ward }}: <strong>{{ t.ward }} {{ user.ward }}</strong>
                             {% endif %}
                         </small>
                     </div>
@@ -136,36 +136,36 @@
 
                 <div class="mb-3">
                     <label class="form-label">
-                        <i class="fas fa-file-alt"></i> Description <span class="text-danger">*</span>
+                        <i class="fas fa-file-alt"></i> {{ t.description }} <span class="text-danger">*</span>
                     </label>
                     <textarea name="description" class="form-control" rows="6" 
-                              required placeholder="Describe your complaint in detail... (minimum 10 characters)" 
+                              required placeholder="{{ t.describe_complaint }} ({{ t.minimum }} 10 {{ t.min_characters }})" 
                               minlength="10"></textarea>
                     <small class="text-muted">
-                        <i class="fas fa-info-circle"></i> Minimum 10 characters required
+                        <i class="fas fa-info-circle"></i> {{ t.minimum }} 10 {{ t.characters_required }}
                     </small>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label">
-                        <i class="fas fa-camera"></i> Upload Image (Optional)
+                        <i class="fas fa-camera"></i> {{ t.upload_image }} ({{ t.optional }})
                     </label>
                     <input type="file" name="image" id="imageInput" 
                            class="form-control" 
                            accept="image/jpeg,image/png,image/gif,image/jpg"
                            onchange="previewImage(event)">
                     <small class="text-muted">
-                        <i class="fas fa-info-circle"></i> Max 5MB. Allowed: JPG, PNG, GIF
+                        <i class="fas fa-info-circle"></i> {{ t.max_size }} 5MB. {{ t.allowed_formats }}: JPG, PNG, GIF
                     </small>
-                    <img id="imagePreview" class="image-preview img-thumbnail" alt="Preview">
+                    <img id="imagePreview" class="image-preview img-thumbnail" alt="{% if lang == 'ne' %}पूर्वावलोकन{% else %}Preview{% endif %}">
                 </div>
 
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-submit btn-lg">
-                        <i class="fas fa-paper-plane"></i> Submit Complaint
+                        <i class="fas fa-paper-plane"></i> {{ t.submit_complaint }}
                     </button>
                     <a href="{% url 'my_complaints' %}" class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-list"></i> View My Complaints
+                        <i class="fas fa-list"></i> {{ t.view_my_complaints }}
                     </a>
                 </div>
             </form>
@@ -181,7 +181,7 @@
         if (file) {
             // Check file size
             if (file.size > 5 * 1024 * 1024) {
-                alert('File size must not exceed 5MB!');
+                alert('{% if lang == "ne" %}फाइल आकार ५एमबी भन्दा बढी हुनु हुँदैन!{% else %}File size must not exceed 5MB!{% endif %}');
                 event.target.value = '';
                 preview.style.display = 'none';
                 return;

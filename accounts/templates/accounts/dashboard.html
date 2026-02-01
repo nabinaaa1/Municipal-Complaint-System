@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.dashboard }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -78,10 +78,10 @@
     <div class="row mb-4">
         <div class="col-12">
             <h2>
-                <i class="fas fa-home"></i> Welcome, {{ user.fullname }}! 👋
+                <i class="fas fa-home"></i> {{ t.welcome }}, {{ user.fullname }}! 👋
             </h2>
             {% if user.ward %}
-                <p class="text-muted">Ward {{ user.ward }}</p>
+                <p class="text-muted">{{ t.ward }} {{ user.ward }}</p>
             {% endif %}
             <hr>
         </div>
@@ -95,7 +95,7 @@
                     <i class="fas fa-clock" style="color: #f39c12;"></i>
                 </div>
                 <h2>{{ stats.pending }}</h2>
-                <p>Pending</p>
+                <p>{{ t.pending }}</p>
             </div>
         </div>
         
@@ -105,7 +105,7 @@
                     <i class="fas fa-spinner" style="color: #2563a8;"></i>
                 </div>
                 <h2>{{ stats.in_progress }}</h2>
-                <p>In Progress</p>
+                <p>{{ t.in_progress }}</p>
             </div>
         </div>
         
@@ -115,7 +115,7 @@
                     <i class="fas fa-check-circle" style="color: #27ae60;"></i>
                 </div>
                 <h2>{{ stats.resolved }}</h2>
-                <p>Resolved</p>
+                <p>{{ t.resolved }}</p>
             </div>
         </div>
     </div>
@@ -123,32 +123,40 @@
     <!-- Recent Complaints -->
     <div class="row">
         <div class="col-12">
-            <h4><i class="fas fa-history"></i> Recent Complaints</h4>
+            <h4><i class="fas fa-history"></i> {{ t.recent_complaints }}</h4>
             {% if recent_complaints %}
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
-                                <th>Ward</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                                <th>Date</th>
+                                <th>{{ t.id }}</th>
+                                <th>{{ t.ward }}</th>
+                                <th>{{ t.category }}</th>
+                                <th>{{ t.status }}</th>
+                                <th>{{ t.date }}</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for complaint in recent_complaints %}
                                 <tr>
                                     <td>#{{ complaint.id }}</td>
-                                    <td>Ward {{ complaint.ward }}</td>
-                                    <td>{{ complaint.category }}</td>
+                                    <td>{{ t.ward }} {{ complaint.ward }}</td>
+                                    <td>
+                                        {% if complaint.category == 'Road Maintenance' %}{{ t.road_maintenance }}
+                                        {% elif complaint.category == 'Street Light' %}{{ t.street_light }}
+                                        {% elif complaint.category == 'Water Supply' %}{{ t.water_supply }}
+                                        {% elif complaint.category == 'Sanitation' %}{{ t.sanitation }}
+                                        {% elif complaint.category == 'Traffic' %}{{ t.traffic }}
+                                        {% elif complaint.category == 'Parks' %}{{ t.parks }}
+                                        {% else %}{{ t.other }}{% endif %}
+                                    </td>
                                     <td>
                                         {% if complaint.status == 'Pending' %}
-                                            <span class="badge bg-warning">Pending</span>
+                                            <span class="badge bg-warning">{{ t.pending }}</span>
                                         {% elif complaint.status == 'In Progress' %}
-                                            <span class="badge bg-primary">In Progress</span>
+                                            <span class="badge bg-primary">{{ t.in_progress }}</span>
                                         {% else %}
-                                            <span class="badge bg-success">Resolved</span>
+                                            <span class="badge bg-success">{{ t.resolved }}</span>
                                         {% endif %}
                                     </td>
                                     <td>{{ complaint.created_at|date:"M d, Y" }}</td>
@@ -159,7 +167,7 @@
                 </div>
             {% else %}
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No complaints yet. Submit your first complaint!
+                    <i class="fas fa-info-circle"></i> {{ t.no_complaints_yet }}
                 </div>
             {% endif %}
         </div>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Admin Dashboard - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.admin_dashboard }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -147,9 +147,9 @@
     <div class="row mb-4">
         <div class="col-12">
             <h2>
-                <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                <i class="fas fa-tachometer-alt"></i> {{ t.admin_dashboard }}
             </h2>
-            <p class="text-muted">Overview of all complaints and statistics</p>
+            <p class="text-muted">{{ t.overview_statistics }}</p>
         </div>
     </div>
 
@@ -159,7 +159,7 @@
             <div class="admin-stats-card total">
                 <i class="fas fa-clipboard-list"></i>
                 <h2>{{ total_complaints }}</h2>
-                <p class="mb-0">Total Complaints</p>
+                <p class="mb-0">{{ t.total_complaints }}</p>
             </div>
         </div>
         
@@ -167,7 +167,7 @@
             <div class="admin-stats-card pending">
                 <i class="fas fa-clock"></i>
                 <h2>{{ pending_complaints }}</h2>
-                <p class="mb-0">Pending</p>
+                <p class="mb-0">{{ t.pending }}</p>
             </div>
         </div>
         
@@ -175,7 +175,7 @@
             <div class="admin-stats-card progress">
                 <i class="fas fa-spinner"></i>
                 <h2>{{ in_progress_complaints }}</h2>
-                <p class="mb-0">In Progress</p>
+                <p class="mb-0">{{ t.in_progress }}</p>
             </div>
         </div>
         
@@ -183,7 +183,7 @@
             <div class="admin-stats-card resolved">
                 <i class="fas fa-check-circle"></i>
                 <h2>{{ resolved_complaints }}</h2>
-                <p class="mb-0">Resolved</p>
+                <p class="mb-0">{{ t.resolved }}</p>
             </div>
         </div>
     </div>
@@ -193,12 +193,12 @@
         <div class="col-md-7">
             <div class="chart-container">
                 <h4 class="mb-4">
-                    <i class="fas fa-map-marked-alt"></i> Ward-wise Complaint Distribution
+                    <i class="fas fa-map-marked-alt"></i> {{ t.ward_wise_distribution }}
                 </h4>
                 
                 {% for ward in ward_stats %}
                 <div class="ward-bar">
-                    <div class="ward-label">Ward {{ ward.ward }}</div>
+                    <div class="ward-label">{{ t.ward }} {{ ward.ward }}</div>
                     <div class="bar-container">
                         <div class="bar-fill" style="width: {{ ward.percentage }}%;">
                             {{ ward.count }}
@@ -213,20 +213,19 @@
         <div class="col-md-5">
             <div class="chart-container">
                 <h4 class="mb-4">
-                    <i class="fas fa-chart-pie"></i> Category-wise Statistics
+                    <i class="fas fa-chart-pie"></i> {{ t.category_wise_statistics }}
                 </h4>
                 
                 {% for category in category_stats %}
                 <div class="category-item">
                     <div class="category-name">
-                        {% if category.category == 'Road Maintenance' %}🛣️
-                        {% elif category.category == 'Street Light' %}💡
-                        {% elif category.category == 'Water Supply' %}💧
-                        {% elif category.category == 'Sanitation' %}🗑️
-                        {% elif category.category == 'Traffic' %}🚦
-                        {% elif category.category == 'Parks' %}🌳
-                        {% else %}📌{% endif %}
-                        {{ category.category }}
+                        {% if category.category == 'Road Maintenance' %}🛣️ {{ t.road_maintenance }}
+                        {% elif category.category == 'Street Light' %}💡 {{ t.street_light }}
+                        {% elif category.category == 'Water Supply' %}💧 {{ t.water_supply }}
+                        {% elif category.category == 'Sanitation' %}🗑️ {{ t.sanitation }}
+                        {% elif category.category == 'Traffic' %}🚦 {{ t.traffic }}
+                        {% elif category.category == 'Parks' %}🌳 {{ t.parks }}
+                        {% else %}📌 {{ t.other }}{% endif %}
                     </div>
                     <div class="category-count">{{ category.count }}</div>
                 </div>
@@ -240,7 +239,7 @@
         <div class="col-12">
             <div class="chart-container">
                 <h4 class="mb-3">
-                    <i class="fas fa-history"></i> Recent Complaints
+                    <i class="fas fa-history"></i> {{ t.recent_complaints }}
                 </h4>
                 
                 {% if recent_complaints %}
@@ -248,13 +247,13 @@
                     <table class="table table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
-                                <th>Citizen</th>
-                                <th>Ward</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                                <th>Action</th>
+                                <th>{{ t.id }}</th>
+                                <th>{{ t.citizen }}</th>
+                                <th>{{ t.ward }}</th>
+                                <th>{{ t.category }}</th>
+                                <th>{{ t.status }}</th>
+                                <th>{{ t.date }}</th>
+                                <th>{{ t.action }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -262,22 +261,30 @@
                             <tr>
                                 <td><strong>#{{ complaint.id }}</strong></td>
                                 <td>{{ complaint.user.fullname }}</td>
-                                <td><span class="badge bg-secondary">Ward {{ complaint.ward }}</span></td>
-                                <td>{{ complaint.category }}</td>
+                                <td><span class="badge bg-secondary">{{ t.ward }} {{ complaint.ward }}</span></td>
+                                <td>
+                                    {% if complaint.category == 'Road Maintenance' %}{{ t.road_maintenance }}
+                                    {% elif complaint.category == 'Street Light' %}{{ t.street_light }}
+                                    {% elif complaint.category == 'Water Supply' %}{{ t.water_supply }}
+                                    {% elif complaint.category == 'Sanitation' %}{{ t.sanitation }}
+                                    {% elif complaint.category == 'Traffic' %}{{ t.traffic }}
+                                    {% elif complaint.category == 'Parks' %}{{ t.parks }}
+                                    {% else %}{{ t.other }}{% endif %}
+                                </td>
                                 <td>
                                     {% if complaint.status == 'Pending' %}
-                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        <span class="badge bg-warning text-dark">{{ t.pending }}</span>
                                     {% elif complaint.status == 'In Progress' %}
-                                        <span class="badge bg-primary">In Progress</span>
+                                        <span class="badge bg-primary">{{ t.in_progress }}</span>
                                     {% else %}
-                                        <span class="badge bg-success">Resolved</span>
+                                        <span class="badge bg-success">{{ t.resolved }}</span>
                                     {% endif %}
                                 </td>
                                 <td>{{ complaint.created_at|date:"M d, Y" }}</td>
                                 <td>
                                     <a href="/complaints/admin/detail/{{ complaint.id }}/" 
                                        class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye"></i> View
+                                        <i class="fas fa-eye"></i> {{ t.view }}
                                     </a>
                                 </td>
                             </tr>
@@ -287,7 +294,7 @@
                 </div>
                 {% else %}
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No complaints yet.
+                    <i class="fas fa-info-circle"></i> {{ t.no_complaints_yet }}
                 </div>
                 {% endif %}
             </div>

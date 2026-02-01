@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Give Feedback - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.give_feedback }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -85,18 +85,26 @@
     <div class="feedback-card">
         <div class="feedback-header">
             <i class="fas fa-star"></i>
-            <h2 class="mb-0">Give Feedback</h2>
-            <p class="mb-0">Rate your experience with complaint resolution</p>
+            <h2 class="mb-0">{{ t.give_feedback }}</h2>
+            <p class="mb-0">{{ t.rate_experience }}</p>
         </div>
         
         <div class="feedback-body">
             <!-- Complaint Summary -->
             <div class="complaint-summary">
-                <h6 class="mb-2"><i class="fas fa-file-alt"></i> Complaint #{{ complaint.id }}</h6>
-                <p class="mb-1"><strong>Category:</strong> {{ complaint.category }}</p>
-                <p class="mb-1"><strong>Ward:</strong> Ward {{ complaint.ward }}</p>
-                <p class="mb-0"><strong>Status:</strong> 
-                    <span class="badge bg-success">Resolved</span>
+                <h6 class="mb-2"><i class="fas fa-file-alt"></i> {{ t.complaint }} #{{ complaint.id }}</h6>
+                <p class="mb-1"><strong>{{ t.category }}:</strong> 
+                    {% if complaint.category == 'Road Maintenance' %}{{ t.road_maintenance }}
+                    {% elif complaint.category == 'Street Light' %}{{ t.street_light }}
+                    {% elif complaint.category == 'Water Supply' %}{{ t.water_supply }}
+                    {% elif complaint.category == 'Sanitation' %}{{ t.sanitation }}
+                    {% elif complaint.category == 'Traffic' %}{{ t.traffic }}
+                    {% elif complaint.category == 'Parks' %}{{ t.parks }}
+                    {% else %}{{ t.other }}{% endif %}
+                </p>
+                <p class="mb-1"><strong>{{ t.ward }}:</strong> {{ t.ward }} {{ complaint.ward }}</p>
+                <p class="mb-0"><strong>{{ t.status }}:</strong> 
+                    <span class="badge bg-success">{{ t.resolved }}</span>
                 </p>
             </div>
 
@@ -114,46 +122,46 @@
                 
                 <div class="text-center mb-4">
                     <label class="form-label d-block mb-3">
-                        <h5><i class="fas fa-star"></i> How satisfied are you with the resolution?</h5>
+                        <h5><i class="fas fa-star"></i> {{ t.satisfaction_question }}</h5>
                     </label>
                     
                     <div class="star-rating">
                         <input type="radio" name="rating" value="5" id="star5" required>
-                        <label for="star5" title="5 stars">⭐</label>
+                        <label for="star5" title="5 {{ t.stars }}">⭐</label>
                         
                         <input type="radio" name="rating" value="4" id="star4">
-                        <label for="star4" title="4 stars">⭐</label>
+                        <label for="star4" title="4 {{ t.stars }}">⭐</label>
                         
                         <input type="radio" name="rating" value="3" id="star3">
-                        <label for="star3" title="3 stars">⭐</label>
+                        <label for="star3" title="3 {{ t.stars }}">⭐</label>
                         
                         <input type="radio" name="rating" value="2" id="star2">
-                        <label for="star2" title="2 stars">⭐</label>
+                        <label for="star2" title="2 {{ t.stars }}">⭐</label>
                         
                         <input type="radio" name="rating" value="1" id="star1">
-                        <label for="star1" title="1 star">⭐</label>
+                        <label for="star1" title="1 {{ t.stars }}">⭐</label>
                     </div>
-                    <small class="text-muted">Click on stars to rate (1 = Poor, 5 = Excellent)</small>
+                    <small class="text-muted">{{ t.click_stars_to_rate }} (1 = {{ t.poor }}, 5 = {{ t.excellent }})</small>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label">
-                        <i class="fas fa-comment"></i> Your Feedback <span class="text-danger">*</span>
+                        <i class="fas fa-comment"></i> {{ t.your_feedback }} <span class="text-danger">*</span>
                     </label>
                     <textarea name="message" class="form-control form-control-lg" rows="5" 
-                              required placeholder="Please share your experience... (minimum 10 characters)"
+                              required placeholder="{{ t.share_your_experience }}... ({{ t.minimum }} 10 {{ t.min_characters }})"
                               minlength="10"></textarea>
                     <small class="text-muted">
-                        <i class="fas fa-info-circle"></i> Minimum 10 characters required
+                        <i class="fas fa-info-circle"></i> {{ t.minimum }} 10 {{ t.characters_required }}
                     </small>
                 </div>
 
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-warning btn-lg">
-                        <i class="fas fa-paper-plane"></i> Submit Feedback
+                        <i class="fas fa-paper-plane"></i> {{ t.submit_feedback }}
                     </button>
                     <a href="{% url 'complaint_detail' complaint.id %}" class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-arrow-left"></i> Back to Complaint
+                        <i class="fas fa-arrow-left"></i> {{ t.back_to_complaint }}
                     </a>
                 </div>
             </form>

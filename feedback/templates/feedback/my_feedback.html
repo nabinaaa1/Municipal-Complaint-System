@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}My Feedback - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.my_feedback }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -38,9 +38,9 @@
     <div class="row mb-4">
         <div class="col-12">
             <h2>
-                <i class="fas fa-star"></i> My Feedback
+                <i class="fas fa-star"></i> {{ t.my_feedback }}
             </h2>
-            <p class="text-muted">All feedback you've submitted for resolved complaints</p>
+            <p class="text-muted">{{ t.all_feedback }}</p>
         </div>
     </div>
 
@@ -55,10 +55,17 @@
                                 <div class="mb-2">
                                     <h5 class="mb-1">
                                         <i class="fas fa-file-alt text-primary"></i> 
-                                        Complaint #{{ feedback.complaint.id }} - {{ feedback.complaint.category }}
+                                        {{ t.complaint }} #{{ feedback.complaint.id }} - 
+                                        {% if feedback.complaint.category == 'Road Maintenance' %}{{ t.road_maintenance }}
+                                        {% elif feedback.complaint.category == 'Street Light' %}{{ t.street_light }}
+                                        {% elif feedback.complaint.category == 'Water Supply' %}{{ t.water_supply }}
+                                        {% elif feedback.complaint.category == 'Sanitation' %}{{ t.sanitation }}
+                                        {% elif feedback.complaint.category == 'Traffic' %}{{ t.traffic }}
+                                        {% elif feedback.complaint.category == 'Parks' %}{{ t.parks }}
+                                        {% else %}{{ t.other }}{% endif %}
                                     </h5>
                                     <small class="text-muted">
-                                        <i class="fas fa-map-marker-alt"></i> Ward {{ feedback.complaint.ward }} • 
+                                        <i class="fas fa-map-marker-alt"></i> {{ t.ward }} {{ feedback.complaint.ward }} • 
                                         <i class="far fa-calendar"></i> {{ feedback.created_at|date:"M d, Y - h:i A" }}
                                     </small>
                                 </div>
@@ -87,7 +94,7 @@
                                 <div class="text-center">
                                     <a href="{% url 'complaint_detail' feedback.complaint.id %}" 
                                        class="btn btn-outline-primary">
-                                        <i class="fas fa-eye"></i> View Complaint
+                                        <i class="fas fa-eye"></i> {{ t.view_complaint }}
                                     </a>
                                 </div>
                             </div>
@@ -99,10 +106,10 @@
     {% else %}
         <div class="alert alert-info text-center py-5">
             <i class="fas fa-star" style="font-size: 4rem; color: #f59e0b; margin-bottom: 1rem;"></i>
-            <h4>No Feedback Yet</h4>
-            <p class="mb-3">You haven't submitted any feedback yet. Give feedback on your resolved complaints!</p>
+            <h4>{{ t.no_feedback_yet }}</h4>
+            <p class="mb-3">{{ t.feedback_desc }}</p>
             <a href="{% url 'my_complaints' %}" class="btn btn-primary">
-                <i class="fas fa-list"></i> View My Complaints
+                <i class="fas fa-list"></i> {{ t.view_my_complaints }}
             </a>
         </div>
     {% endif %}

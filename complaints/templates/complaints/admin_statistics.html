@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Statistics - Mechinagar Municipality{% endblock %}
+{% block title %}{{ t.statistics }} - {{ t.mechinagar_municipality }}{% endblock %}
 
 {% block content %}
 <style>
@@ -115,9 +115,9 @@
     <div class="row mb-4">
         <div class="col-12">
             <h2>
-                <i class="fas fa-chart-bar"></i> Detailed Statistics & Analytics
+                <i class="fas fa-chart-bar"></i> {{ t.detailed_statistics }}
             </h2>
-            <p class="text-muted">Comprehensive complaint statistics by ward and category</p>
+            <p class="text-muted">{{ t.comprehensive_statistics }}</p>
         </div>
     </div>
 
@@ -125,29 +125,29 @@
     <div class="row g-3 mb-4">
         <div class="col-md-3">
             <div class="stats-overview-card total">
-                <h6 class="text-muted">Total Complaints</h6>
+                <h6 class="text-muted">{{ t.total_complaints }}</h6>
                 <h3 style="color: #6366f1;">{{ total_complaints }}</h3>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stats-overview-card pending">
-                <h6 class="text-muted">Pending</h6>
+                <h6 class="text-muted">{{ t.pending }}</h6>
                 <h3 style="color: #f59e0b;">{{ pending_complaints }}</h3>
-                <small class="text-muted">{{ pending_percentage|floatformat:1 }}% of total</small>
+                <small class="text-muted">{{ pending_percentage|floatformat:1 }}% {{ t.of_total }}</small>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stats-overview-card progress">
-                <h6 class="text-muted">In Progress</h6>
+                <h6 class="text-muted">{{ t.in_progress }}</h6>
                 <h3 style="color: #3b82f6;">{{ in_progress_complaints }}</h3>
-                <small class="text-muted">{{ in_progress_percentage|floatformat:1 }}% of total</small>
+                <small class="text-muted">{{ in_progress_percentage|floatformat:1 }}% {{ t.of_total }}</small>
             </div>
         </div>
         <div class="col-md-3">
             <div class="stats-overview-card resolved">
-                <h6 class="text-muted">Resolved</h6>
+                <h6 class="text-muted">{{ t.resolved }}</h6>
                 <h3 style="color: #10b981;">{{ resolved_complaints }}</h3>
-                <small class="text-muted">{{ resolved_percentage|floatformat:1 }}% of total</small>
+                <small class="text-muted">{{ resolved_percentage|floatformat:1 }}% {{ t.of_total }}</small>
             </div>
         </div>
     </div>
@@ -158,21 +158,21 @@
             <div class="metric-card">
                 <i class="fas fa-calendar-week"></i>
                 <h3>{{ last_7_days }}</h3>
-                <p>Complaints<br>(Last 7 Days)</p>
+                <p>{{ t.complaints }}<br>({{ t.last_7_days }})</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                 <i class="fas fa-calendar-alt"></i>
                 <h3>{{ last_30_days }}</h3>
-                <p>Complaints<br>(Last 30 Days)</p>
+                <p>{{ t.complaints }}<br>({{ t.last_30_days }})</p>
             </div>
         </div>
         <div class="col-md-4">
             <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                 <i class="fas fa-percentage"></i>
                 <h3>{{ resolution_rate|floatformat:1 }}%</h3>
-                <p>Resolution Rate</p>
+                <p>{{ t.resolution_rate }}</p>
             </div>
         </div>
     </div>
@@ -180,25 +180,25 @@
     <!-- Ward-wise Statistics -->
     <div class="stats-table">
         <h4 class="mb-4">
-            <i class="fas fa-map-marked-alt"></i> Ward-wise Detailed Statistics
+            <i class="fas fa-map-marked-alt"></i> {{ t.ward_wise_detailed }}
         </h4>
         
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th>Ward</th>
-                        <th>Total</th>
-                        <th>Pending</th>
-                        <th>In Progress</th>
-                        <th>Resolved</th>
-                        <th>Distribution</th>
+                        <th>{{ t.ward }}</th>
+                        <th>{{ t.total }}</th>
+                        <th>{{ t.pending }}</th>
+                        <th>{{ t.in_progress }}</th>
+                        <th>{{ t.resolved }}</th>
+                        <th>{{ t.distribution }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ward in ward_statistics %}
                     <tr>
-                        <td><strong>Ward {{ ward.ward }}</strong></td>
+                        <td><strong>{{ t.ward }} {{ ward.ward }}</strong></td>
                         <td><span class="badge bg-secondary">{{ ward.total }}</span></td>
                         <td><span class="badge bg-warning text-dark">{{ ward.pending }}</span></td>
                         <td><span class="badge bg-primary">{{ ward.in_progress }}</span></td>
@@ -220,19 +220,19 @@
     <!-- Category-wise Statistics -->
     <div class="stats-table">
         <h4 class="mb-4">
-            <i class="fas fa-list-alt"></i> Category-wise Detailed Statistics
+            <i class="fas fa-list-alt"></i> {{ t.category_wise_detailed }}
         </h4>
         
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead class="table-dark">
                     <tr>
-                        <th>Category</th>
-                        <th>Total</th>
-                        <th>Pending</th>
-                        <th>In Progress</th>
-                        <th>Resolved</th>
-                        <th>Distribution</th>
+                        <th>{{ t.category }}</th>
+                        <th>{{ t.total }}</th>
+                        <th>{{ t.pending }}</th>
+                        <th>{{ t.in_progress }}</th>
+                        <th>{{ t.resolved }}</th>
+                        <th>{{ t.distribution }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -240,14 +240,13 @@
                     <tr>
                         <td>
                             <strong>
-                                {% if category.category == 'Road Maintenance' %}🛣️
-                                {% elif category.category == 'Street Light' %}💡
-                                {% elif category.category == 'Water Supply' %}💧
-                                {% elif category.category == 'Sanitation' %}🗑️
-                                {% elif category.category == 'Traffic' %}🚦
-                                {% elif category.category == 'Parks' %}🌳
-                                {% else %}📌{% endif %}
-                                {{ category.category }}
+                                {% if category.category == 'Road Maintenance' %}🛣️ {{ t.road_maintenance }}
+                                {% elif category.category == 'Street Light' %}💡 {{ t.street_light }}
+                                {% elif category.category == 'Water Supply' %}💧 {{ t.water_supply }}
+                                {% elif category.category == 'Sanitation' %}🗑️ {{ t.sanitation }}
+                                {% elif category.category == 'Traffic' %}🚦 {{ t.traffic }}
+                                {% elif category.category == 'Parks' %}🌳 {{ t.parks }}
+                                {% else %}📌 {{ t.other }}{% endif %}
                             </strong>
                         </td>
                         <td><span class="badge bg-secondary">{{ category.total }}</span></td>
@@ -272,10 +271,10 @@
     <div class="row">
         <div class="col-12">
             <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary btn-lg">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                <i class="fas fa-arrow-left"></i> {{ t.back_to_dashboard }}
             </a>
             <a href="{% url 'admin_complaint_list' %}" class="btn btn-primary btn-lg">
-                <i class="fas fa-list"></i> Manage Complaints
+                <i class="fas fa-list"></i> {{ t.manage_complaints }}
             </a>
         </div>
     </div>
