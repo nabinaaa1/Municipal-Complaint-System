@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from datetime import datetime
 from .models import Complaint
 
 @login_required
@@ -50,18 +52,55 @@ def submit_complaint(request):
 
 @login_required
 def my_complaints(request):
-    """View user's complaints"""
+    """View user's complaints with pagination and date filters"""
     # Optimized with select_related to prevent N+1 queries
-    complaints = Complaint.objects.filter(user=request.user).select_related('user').order_by('-created_at')
+    complaints_list = Complaint.objects.filter(user=request.user).select_related('user').order_by('-created_at')
     
     # Filter by status if provided
     status_filter = request.GET.get('status')
     if status_filter:
-        complaints = complaints.filter(status=status_filter)
+        complaints_list = complaints_list.filter(status=status_filter)
+    
+    # Date range filters
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+    
+    if from_date:
+        try:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d')
+            complaints_list = complaints_list.filter(created_at__gte=from_date_obj)
+        except ValueError:
+            messages.error(request, 'Invalid from date format.')
+    
+    if to_date:
+        try:
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d')
+            # Add one day to include the entire to_date
+            from datetime import timedelta
+            to_date_obj = to_date_obj + timedelta(days=1)
+            complaints_list = complaints_list.filter(created_at__lt=to_date_obj)
+        except ValueError:
+            messages.error(request, 'Invalid to date format.')
+    
+    # Pagination - 10 complaints per page
+    paginator = Paginator(complaints_list, 10)
+    page = request.GET.get('page')
+    
+    try:
+        complaints = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page
+        complaints = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range, deliver last page of results
+        complaints = paginator.page(paginator.num_pages)
     
     context = {
         'complaints': complaints,
-        'status_filter': status_filter
+        'status_filter': status_filter,
+        'from_date': from_date,
+        'to_date': to_date,
+        'paginator': paginator,
     }
     return render(request, 'complaints/my_complaints.html', context)
 

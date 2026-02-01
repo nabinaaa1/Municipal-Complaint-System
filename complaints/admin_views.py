@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Count, Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import Complaint
 from accounts.models import User
 from datetime import datetime, timedelta
@@ -56,10 +57,10 @@ def admin_dashboard(request):
 @login_required
 @user_passes_test(is_admin)
 def admin_complaint_list(request):
-    """Admin view to list and filter all complaints"""
+    """Admin view to list and filter all complaints with pagination and date filters"""
     
     # Start with all complaints, optimized with select_related
-    complaints = Complaint.objects.select_related('user').order_by('-created_at')
+    complaints_list = Complaint.objects.select_related('user').order_by('-created_at')
     
     # Filtering
     status_filter = request.GET.get('status')
@@ -68,20 +69,53 @@ def admin_complaint_list(request):
     search = request.GET.get('search')
     
     if status_filter:
-        complaints = complaints.filter(status=status_filter)
+        complaints_list = complaints_list.filter(status=status_filter)
     
     if ward_filter:
-        complaints = complaints.filter(ward=ward_filter)
+        complaints_list = complaints_list.filter(ward=ward_filter)
     
     if category_filter:
-        complaints = complaints.filter(category=category_filter)
+        complaints_list = complaints_list.filter(category=category_filter)
     
     if search:
-        complaints = complaints.filter(
+        complaints_list = complaints_list.filter(
             Q(description__icontains=search) | 
             Q(user__fullname__icontains=search) |
             Q(user__email__icontains=search)
         )
+    
+    # Date range filters
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+    
+    if from_date:
+        try:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d')
+            complaints_list = complaints_list.filter(created_at__gte=from_date_obj)
+        except ValueError:
+            messages.error(request, 'Invalid from date format.')
+    
+    if to_date:
+        try:
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d')
+            # Add one day to include the entire to_date
+            to_date_obj = to_date_obj + timedelta(days=1)
+            complaints_list = complaints_list.filter(created_at__lt=to_date_obj)
+        except ValueError:
+            messages.error(request, 'Invalid to date format.')
+    
+    # Pagination - 10 complaints per page
+    paginator = Paginator(complaints_list, 10)
+    page = request.GET.get('page')
+    
+    try:
+        complaints = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page
+        complaints = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range, deliver last page of results
+        complaints = paginator.page(paginator.num_pages)
     
     context = {
         'complaints': complaints,
@@ -89,6 +123,9 @@ def admin_complaint_list(request):
         'ward_filter': ward_filter,
         'category_filter': category_filter,
         'search': search,
+        'from_date': from_date,
+        'to_date': to_date,
+        'paginator': paginator,
     }
     
     return render(request, 'complaints/admin_complaint_list.html', context)

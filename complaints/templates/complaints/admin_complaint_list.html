@@ -27,11 +27,61 @@
         transform: translateX(5px);
     }
     
-    .quick-status-btn {
-        padding: 5px 12px;
-        font-size: 0.85rem;
-        border-radius: 5px;
-        transition: all 0.2s ease;
+    /* Date Input Styling */
+    input[type="date"] {
+        padding: 10px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+    
+    input[type="date"]:focus {
+        border-color: #2563a8;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(37, 99, 168, 0.1);
+    }
+    
+    /* Pagination Styling */
+    .pagination-container {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 30px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    
+    .pagination {
+        margin: 0;
+        justify-content: center;
+    }
+    
+    .page-link {
+        color: #2563a8;
+        border: 2px solid #e5e7eb;
+        margin: 0 3px;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .page-link:hover {
+        background: #2563a8;
+        border-color: #2563a8;
+        color: white;
+    }
+    
+    .page-item.active .page-link {
+        background: #2563a8;
+        border-color: #2563a8;
+        color: white;
+    }
+    
+    .page-item.disabled .page-link {
+        background: #f3f4f6;
+        border-color: #e5e7eb;
+        color: #9ca3af;
     }
 </style>
 
@@ -56,7 +106,7 @@
     <!-- Filters -->
     <div class="filter-card">
         <form method="get" class="row g-3">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label class="form-label"><i class="fas fa-filter"></i> {{ t.status }}</label>
                 <select name="status" class="form-select">
                     <option value="">{{ t.all_status }}</option>
@@ -78,7 +128,7 @@
                 </select>
             </div>
             
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label class="form-label"><i class="fas fa-list"></i> {{ t.category }}</label>
                 <select name="category" class="form-select">
                     <option value="">{{ t.all_categories }}</option>
@@ -92,32 +142,80 @@
                 </select>
             </div>
             
-            <div class="col-md-3">
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-calendar-alt"></i> {% if lang == 'ne' %}मिति देखि{% else %}From Date{% endif %}
+                </label>
+                <input type="date" name="from_date" class="form-control" value="{{ from_date }}">
+            </div>
+            
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-calendar-alt"></i> {% if lang == 'ne' %}मिति सम्म{% else %}To Date{% endif %}
+                </label>
+                <input type="date" name="to_date" class="form-control" value="{{ to_date }}">
+            </div>
+            
+            <div class="col-md-2">
                 <label class="form-label"><i class="fas fa-search"></i> {{ t.search }}</label>
                 <input type="text" name="search" class="form-control" 
                        placeholder="{{ t.search_description }}" 
                        value="{{ search }}">
             </div>
-            
-            <div class="col-md-1 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
         </form>
         
-        <div class="mt-3">
-            <a href="{% url 'admin_complaint_list' %}" class="btn btn-secondary btn-sm">
-                <i class="fas fa-redo"></i> {{ t.reset_filters }}
-            </a>
-            <span class="ms-3 text-muted">
-                <strong>{{ complaints.count }}</strong> {{ t.complaints_found }}
-            </span>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary me-2" onclick="this.form.submit();">
+                    <i class="fas fa-search"></i> {{ t.filter }}
+                </button>
+                <a href="{% url 'admin_complaint_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> {{ t.reset_filters }}
+                </a>
+            </div>
+            <div class="col-md-6 text-end">
+                <span class="text-muted">
+                    <strong>{{ paginator.count }}</strong> {{ t.complaints_found }}
+                </span>
+            </div>
         </div>
+        
+        {% if from_date or to_date %}
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle"></i> 
+                    {% if lang == 'ne' %}
+                        मिति दायरा: 
+                        {% if from_date %}<strong>{{ from_date }}</strong>{% else %}सुरु{% endif %} 
+                        देखि 
+                        {% if to_date %}<strong>{{ to_date }}</strong>{% else %}अहिलेसम्म{% endif %}
+                    {% else %}
+                        Date range: 
+                        {% if from_date %}<strong>{{ from_date }}</strong>{% else %}Beginning{% endif %} 
+                        to 
+                        {% if to_date %}<strong>{{ to_date }}</strong>{% else %}Now{% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     <!-- Complaints List -->
     {% if complaints %}
+        <!-- Results Info -->
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> 
+            {% if lang == 'ne' %}
+                <strong>{{ complaints.start_index }}-{{ complaints.end_index }}</strong> of <strong>{{ paginator.count }}</strong> देखाउँदै। 
+                पृष्ठ <strong>{{ complaints.number }}</strong> of <strong>{{ paginator.num_pages }}</strong>।
+            {% else %}
+                Showing <strong>{{ complaints.start_index }}-{{ complaints.end_index }}</strong> of <strong>{{ paginator.count }}</strong>. 
+                Page <strong>{{ complaints.number }}</strong> of <strong>{{ paginator.num_pages }}</strong>.
+            {% endif %}
+        </div>
+        
         {% for complaint in complaints %}
             <div class="complaint-row">
                 <div class="row align-items-center">
@@ -174,6 +272,89 @@
                 </div>
             </div>
         {% endfor %}
+        
+        <!-- Pagination Controls -->
+        {% if paginator.num_pages > 1 %}
+        <div class="pagination-container">
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <!-- Build URL params for pagination -->
+                    {% with url_params="" %}
+                        {% if status_filter %}{% with url_params=url_params|add:"&status="|add:status_filter %}{% endwith %}{% endif %}
+                        {% if ward_filter %}{% with url_params=url_params|add:"&ward="|add:ward_filter %}{% endwith %}{% endif %}
+                        {% if category_filter %}{% with url_params=url_params|add:"&category="|add:category_filter %}{% endwith %}{% endif %}
+                        {% if search %}{% with url_params=url_params|add:"&search="|add:search %}{% endwith %}{% endif %}
+                        {% if from_date %}{% with url_params=url_params|add:"&from_date="|add:from_date %}{% endwith %}{% endif %}
+                        {% if to_date %}{% with url_params=url_params|add:"&to_date="|add:to_date %}{% endwith %}{% endif %}
+                    
+                    <!-- Previous Button -->
+                    {% if complaints.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}{% if ward_filter %}&ward={{ ward_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if from_date %}&from_date={{ from_date }}{% endif %}{% if to_date %}&to_date={{ to_date }}{% endif %}" aria-label="First">
+                                <i class="fas fa-angle-double-left"></i> {% if lang == 'ne' %}पहिलो{% else %}First{% endif %}
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ complaints.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if ward_filter %}&ward={{ ward_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if from_date %}&from_date={{ from_date }}{% endif %}{% if to_date %}&to_date={{ to_date }}{% endif %}" aria-label="Previous">
+                                <i class="fas fa-angle-left"></i> {% if lang == 'ne' %}अघिल्लो{% else %}Previous{% endif %}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                <i class="fas fa-angle-double-left"></i> {% if lang == 'ne' %}पहिलो{% else %}First{% endif %}
+                            </span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                <i class="fas fa-angle-left"></i> {% if lang == 'ne' %}अघिल्लो{% else %}Previous{% endif %}
+                            </span>
+                        </li>
+                    {% endif %}
+                    
+                    <!-- Page Numbers -->
+                    {% for num in paginator.page_range %}
+                        {% if num == complaints.number %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > complaints.number|add:'-3' and num < complaints.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if ward_filter %}&ward={{ ward_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if from_date %}&from_date={{ from_date }}{% endif %}{% if to_date %}&to_date={{ to_date }}{% endif %}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <!-- Next Button -->
+                    {% if complaints.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ complaints.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if ward_filter %}&ward={{ ward_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if from_date %}&from_date={{ from_date }}{% endif %}{% if to_date %}&to_date={{ to_date }}{% endif %}" aria-label="Next">
+                                {% if lang == 'ne' %}अर्को{% else %}Next{% endif %} <i class="fas fa-angle-right"></i>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}{% if ward_filter %}&ward={{ ward_filter }}{% endif %}{% if category_filter %}&category={{ category_filter }}{% endif %}{% if search %}&search={{ search }}{% endif %}{% if from_date %}&from_date={{ from_date }}{% endif %}{% if to_date %}&to_date={{ to_date }}{% endif %}" aria-label="Last">
+                                {% if lang == 'ne' %}अन्तिम{% else %}Last{% endif %} <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                {% if lang == 'ne' %}अर्को{% else %}Next{% endif %} <i class="fas fa-angle-right"></i>
+                            </span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                {% if lang == 'ne' %}अन्तिम{% else %}Last{% endif %} <i class="fas fa-angle-double-right"></i>
+                            </span>
+                        </li>
+                    {% endif %}
+                    {% endwith %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+        
     {% else %}
         <div class="alert alert-info text-center py-5">
             <i class="fas fa-inbox" style="font-size: 4rem; color: #3b82f6;"></i>
@@ -182,4 +363,13 @@
         </div>
     {% endif %}
 </div>
+
+<script>
+// Auto-submit form when filter changes
+document.querySelectorAll('select[name], input[type="date"]').forEach(element => {
+    element.addEventListener('change', function() {
+        this.form.submit();
+    });
+});
+</script>
 {% endblock %}
