@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.db.models import Count, Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponse
+import csv
 from .models import Complaint
 from accounts.models import User
 from datetime import datetime, timedelta
@@ -129,6 +131,111 @@ def admin_complaint_list(request):
     }
     
     return render(request, 'complaints/admin_complaint_list.html', context)
+
+
+@login_required
+@user_passes_test(is_admin)
+def export_complaints_csv(request):
+    """Export filtered complaints to CSV file"""
+    
+    # Get language for column headers
+    lang = request.session.get('language', 'en')
+    
+    # Start with all complaints
+    complaints = Complaint.objects.select_related('user').order_by('-created_at')
+    
+    # Apply same filters as admin_complaint_list
+    status_filter = request.GET.get('status')
+    ward_filter = request.GET.get('ward')
+    category_filter = request.GET.get('category')
+    search = request.GET.get('search')
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+    
+    if status_filter:
+        complaints = complaints.filter(status=status_filter)
+    
+    if ward_filter:
+        complaints = complaints.filter(ward=ward_filter)
+    
+    if category_filter:
+        complaints = complaints.filter(category=category_filter)
+    
+    if search:
+        complaints = complaints.filter(
+            Q(description__icontains=search) | 
+            Q(user__fullname__icontains=search) |
+            Q(user__email__icontains=search)
+        )
+    
+    if from_date:
+        try:
+            from_date_obj = datetime.strptime(from_date, '%Y-%m-%d')
+            complaints = complaints.filter(created_at__gte=from_date_obj)
+        except ValueError:
+            pass
+    
+    if to_date:
+        try:
+            to_date_obj = datetime.strptime(to_date, '%Y-%m-%d')
+            to_date_obj = to_date_obj + timedelta(days=1)
+            complaints = complaints.filter(created_at__lt=to_date_obj)
+        except ValueError:
+            pass
+    
+    # Create CSV response
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="complaints_export_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv"'
+    
+    # Add BOM for Excel UTF-8 recognition
+    response.write('\ufeff')
+    
+    writer = csv.writer(response)
+    
+    # Write header based on language
+    if lang == 'ne':
+        writer.writerow([
+            'गुनासो आईडी',
+            'नागरिकको नाम',
+            'इमेल',
+            'फोन',
+            'वडा',
+            'श्रेणी',
+            'विवरण',
+            'स्थिति',
+            'पेश गरिएको मिति',
+            'अद्यावधिक मिति'
+        ])
+    else:
+        writer.writerow([
+            'Complaint ID',
+            'Citizen Name',
+            'Email',
+            'Phone',
+            'Ward',
+            'Category',
+            'Description',
+            'Status',
+            'Submitted Date',
+            'Updated Date'
+        ])
+    
+    # Write complaint data
+    for complaint in complaints:
+        writer.writerow([
+            complaint.id,
+            complaint.user.fullname,
+            complaint.user.email,
+            complaint.user.phone or 'N/A',
+            f'Ward {complaint.ward}' if lang == 'en' else f'वडा {complaint.ward}',
+            complaint.category,
+            complaint.description,
+            complaint.status,
+            complaint.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            complaint.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+        ])
+    
+    return response
 
 
 @login_required

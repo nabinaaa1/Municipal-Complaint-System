@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ t.manage_complaints }} - {{ t.mechinagar_municipality }}{% endblock %}
+{% block title %}{{ t.manage_complaints }} - {{ t.mechinagar_municipality %}{% endblock %}
 
 {% block content %}
 <style>
@@ -40,6 +40,29 @@
         border-color: #2563a8;
         outline: none;
         box-shadow: 0 0 0 3px rgba(37, 99, 168, 0.1);
+    }
+    
+    /* Export Button Styling */
+    .btn-export {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+    }
+    
+    .btn-export:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+    
+    .btn-export i {
+        margin-right: 8px;
     }
     
     /* Pagination Styling */
@@ -86,20 +109,23 @@
 </style>
 
 <div class="container-fluid py-4">
-    <!-- Header with Back Button -->
+    <!-- Header with Back Button and Export -->
     <div class="row mb-4">
-        <div class="col-12 d-flex justify-content-between align-items-center">
-            <div>
-                <h2>
-                    <i class="fas fa-tasks"></i> {{ t.manage_all_complaints }}
-                </h2>
-                <p class="text-muted">{{ t.view_filter_update }}</p>
-            </div>
-            <div>
-                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary btn-lg">
-                    <i class="fas fa-arrow-left"></i> {{ t.back_to_dashboard }}
-                </a>
-            </div>
+        <div class="col-md-6">
+            <h2>
+                <i class="fas fa-tasks"></i> {{ t.manage_all_complaints }}
+            </h2>
+            <p class="text-muted">{{ t.view_filter_update }}</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary btn-lg me-2">
+                <i class="fas fa-arrow-left"></i> {{ t.back_to_dashboard }}
+            </a>
+            <a href="{% url 'export_complaints_csv' %}?{% if status_filter %}status={{ status_filter }}&{% endif %}{% if ward_filter %}ward={{ ward_filter }}&{% endif %}{% if category_filter %}category={{ category_filter }}&{% endif %}{% if search %}search={{ search }}&{% endif %}{% if from_date %}from_date={{ from_date }}&{% endif %}{% if to_date %}to_date={{ to_date }}{% endif %}" 
+               class="btn btn-export btn-lg">
+                <i class="fas fa-file-excel"></i> 
+                {% if lang == 'ne' %}CSV मा निर्यात गर्नुहोस्{% else %}Export to CSV{% endif %}
+            </a>
         </div>
     </div>
 
@@ -162,23 +188,26 @@
                        placeholder="{{ t.search_description }}" 
                        value="{{ search }}">
             </div>
+            
+            <!-- Submit buttons inside form -->
+            <div class="col-12 mt-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-search"></i> {{ t.filter }}
+                        </button>
+                        <a href="{% url 'admin_complaint_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i> {{ t.reset_filters }}
+                        </a>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <span class="text-muted">
+                            <strong>{{ paginator.count }}</strong> {{ t.complaints_found }}
+                        </span>
+                    </div>
+                </div>
+            </div>
         </form>
-        
-        <div class="row mt-3">
-            <div class="col-md-6">
-                <button type="submit" class="btn btn-primary me-2" onclick="this.form.submit();">
-                    <i class="fas fa-search"></i> {{ t.filter }}
-                </button>
-                <a href="{% url 'admin_complaint_list' %}" class="btn btn-secondary">
-                    <i class="fas fa-redo"></i> {{ t.reset_filters }}
-                </a>
-            </div>
-            <div class="col-md-6 text-end">
-                <span class="text-muted">
-                    <strong>{{ paginator.count }}</strong> {{ t.complaints_found }}
-                </span>
-            </div>
-        </div>
         
         {% if from_date or to_date %}
         <div class="row mt-3">
@@ -278,15 +307,6 @@
         <div class="pagination-container">
             <nav aria-label="Page navigation">
                 <ul class="pagination">
-                    <!-- Build URL params for pagination -->
-                    {% with url_params="" %}
-                        {% if status_filter %}{% with url_params=url_params|add:"&status="|add:status_filter %}{% endwith %}{% endif %}
-                        {% if ward_filter %}{% with url_params=url_params|add:"&ward="|add:ward_filter %}{% endwith %}{% endif %}
-                        {% if category_filter %}{% with url_params=url_params|add:"&category="|add:category_filter %}{% endwith %}{% endif %}
-                        {% if search %}{% with url_params=url_params|add:"&search="|add:search %}{% endwith %}{% endif %}
-                        {% if from_date %}{% with url_params=url_params|add:"&from_date="|add:from_date %}{% endwith %}{% endif %}
-                        {% if to_date %}{% with url_params=url_params|add:"&to_date="|add:to_date %}{% endwith %}{% endif %}
-                    
                     <!-- Previous Button -->
                     {% if complaints.has_previous %}
                         <li class="page-item">
@@ -349,7 +369,6 @@
                             </span>
                         </li>
                     {% endif %}
-                    {% endwith %}
                 </ul>
             </nav>
         </div>
@@ -365,11 +384,18 @@
 </div>
 
 <script>
-// Auto-submit form when filter changes
-document.querySelectorAll('select[name], input[type="date"]').forEach(element => {
+// Auto-submit form when filter dropdowns or date inputs change
+document.querySelectorAll('select[name="status"], select[name="ward"], select[name="category"], input[type="date"]').forEach(element => {
     element.addEventListener('change', function() {
         this.form.submit();
     });
+});
+
+// Search input submits on Enter key
+document.querySelector('input[name="search"]')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        this.form.submit();
+    }
 });
 </script>
 {% endblock %}
