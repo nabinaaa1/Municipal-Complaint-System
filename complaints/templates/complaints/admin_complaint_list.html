@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ t.manage_complaints }} - {{ t.mechinagar_municipality %}{% endblock %}
+{% block title %}{{ t.manage_complaints }} - {{ t.mechinagar_municipality }{% endblock %}
 
 {% block content %}
 <style>
@@ -131,10 +131,10 @@
 
     <!-- Filters -->
     <div class="filter-card">
-        <form method="get" class="row g-3">
+        <form method="get" id="filterForm" class="row g-3">
             <div class="col-md-2">
                 <label class="form-label"><i class="fas fa-filter"></i> {{ t.status }}</label>
-                <select name="status" class="form-select">
+                <select name="status" class="form-select" onchange="document.getElementById('filterForm').submit();">
                     <option value="">{{ t.all_status }}</option>
                     <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>{{ t.pending }}</option>
                     <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>{{ t.in_progress }}</option>
@@ -144,7 +144,7 @@
             
             <div class="col-md-2">
                 <label class="form-label"><i class="fas fa-map-marker-alt"></i> {{ t.ward }}</label>
-                <select name="ward" class="form-select">
+                <select name="ward" class="form-select" onchange="document.getElementById('filterForm').submit();">
                     <option value="">{{ t.all_wards }}</option>
                     {% for i in "123456789012345" %}
                         <option value="{{ forloop.counter }}" {% if ward_filter == forloop.counter|stringformat:"s" %}selected{% endif %}>
@@ -156,7 +156,7 @@
             
             <div class="col-md-2">
                 <label class="form-label"><i class="fas fa-list"></i> {{ t.category }}</label>
-                <select name="category" class="form-select">
+                <select name="category" class="form-select" onchange="document.getElementById('filterForm').submit();">
                     <option value="">{{ t.all_categories }}</option>
                     <option value="Road Maintenance" {% if category_filter == 'Road Maintenance' %}selected{% endif %}>{{ t.road_maintenance }}</option>
                     <option value="Street Light" {% if category_filter == 'Street Light' %}selected{% endif %}>{{ t.street_light }}</option>
@@ -172,14 +172,14 @@
                 <label class="form-label">
                     <i class="fas fa-calendar-alt"></i> {% if lang == 'ne' %}मिति देखि{% else %}From Date{% endif %}
                 </label>
-                <input type="date" name="from_date" class="form-control" value="{{ from_date }}">
+                <input type="date" name="from_date" class="form-control" value="{{ from_date }}" onchange="document.getElementById('filterForm').submit();">
             </div>
             
             <div class="col-md-2">
                 <label class="form-label">
                     <i class="fas fa-calendar-alt"></i> {% if lang == 'ne' %}मिति सम्म{% else %}To Date{% endif %}
                 </label>
-                <input type="date" name="to_date" class="form-control" value="{{ to_date }}">
+                <input type="date" name="to_date" class="form-control" value="{{ to_date }}" onchange="document.getElementById('filterForm').submit();">
             </div>
             
             <div class="col-md-2">
@@ -382,20 +382,4 @@
         </div>
     {% endif %}
 </div>
-
-<script>
-// Auto-submit form when filter dropdowns or date inputs change
-document.querySelectorAll('select[name="status"], select[name="ward"], select[name="category"], input[type="date"]').forEach(element => {
-    element.addEventListener('change', function() {
-        this.form.submit();
-    });
-});
-
-// Search input submits on Enter key
-document.querySelector('input[name="search"]')?.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        this.form.submit();
-    }
-});
-</script>
 {% endblock %}

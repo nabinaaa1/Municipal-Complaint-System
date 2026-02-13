@@ -9,7 +9,7 @@
         border-radius: 15px;
         box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         overflow: hidden;
-        max-width: 1000px;
+        max-width: 1200px;
         margin: 30px auto;
     }
     
@@ -24,6 +24,61 @@
         padding: 20px;
         border-radius: 10px;
         border: 2px solid #e2e8f0;
+    }
+    
+    /* Remarks Section Styling */
+    .remarks-section {
+        background: #fffbeb;
+        border-left: 4px solid #f59e0b;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+    
+    .remark-item {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-left: 3px solid #f59e0b;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .remark-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .remark-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .remark-author {
+        font-weight: 600;
+        color: #1f2937;
+    }
+    
+    .remark-date {
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+    
+    .remark-text {
+        color: #374151;
+        line-height: 1.6;
+        white-space: pre-wrap;
+    }
+    
+    .add-remark-form {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px solid #fbbf24;
+        margin-top: 15px;
     }
 </style>
 
@@ -123,10 +178,11 @@
             {% endif %}
 
             <!-- Status Update Form -->
-            <div class="status-update-form">
+            <div class="status-update-form mb-4">
                 <h5 class="mb-3"><i class="fas fa-edit"></i> {{ t.update_status }}</h5>
                 <form method="post">
                     {% csrf_token %}
+                    <input type="hidden" name="action" value="update_status">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-bold">{{ t.change_status }}</label>
@@ -149,6 +205,68 @@
                         </div>
                     </div>
                 </form>
+            </div>
+
+            <!-- ADMIN REMARKS SECTION -->
+            <div class="remarks-section">
+                <h5 class="mb-3">
+                    <i class="fas fa-sticky-note"></i> 
+                    {% if lang == 'ne' %}आन्तरिक टिप्पणीहरू{% else %}Internal Remarks{% endif %}
+                    <span class="badge bg-warning text-dark">{% if lang == 'ne' %}प्रशासकको लागि मात्र{% else %}Admin Only{% endif %}</span>
+                </h5>
+                
+                <!-- Existing Remarks List -->
+                {% if remarks %}
+                    <div class="mb-3">
+                        {% for remark in remarks %}
+                        <div class="remark-item">
+                            <div class="remark-header">
+                                <div class="remark-author">
+                                    <i class="fas fa-user-shield"></i> {{ remark.admin_user.fullname }}
+                                </div>
+                                <div class="remark-date">
+                                    <i class="far fa-clock"></i> {{ remark.created_at|date:"M d, Y - h:i A" }}
+                                </div>
+                            </div>
+                            <div class="remark-text">{{ remark.remark }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> 
+                        {% if lang == 'ne' %}अझै कुनै आन्तरिक टिप्पणी थपिएको छैन।{% else %}No internal remarks added yet.{% endif %}
+                    </div>
+                {% endif %}
+
+                <!-- Add New Remark Form -->
+                <div class="add-remark-form">
+                    <h6 class="mb-3">
+                        <i class="fas fa-plus-circle"></i> 
+                        {% if lang == 'ne' %}नयाँ टिप्पणी थप्नुहोस्{% else %}Add New Remark{% endif %}
+                    </h6>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="add_remark">
+                        <div class="mb-3">
+                            <label class="form-label">
+                                {% if lang == 'ne' %}टिप्पणी{% else %}Remark{% endif %} 
+                                <span class="text-danger">*</span>
+                            </label>
+                            <textarea name="remark" class="form-control" rows="3" 
+                                      required minlength="5"
+                                      placeholder="{% if lang == 'ne' %}आन्तरिक नोट लेख्नुहोस् (उदाहरण: 'ठेकेदारलाई सम्पर्क गरियो', 'बजेट स्वीकृतिको प्रतीक्षा गर्दै'){% else %}Write internal note (e.g., 'Contacted contractor', 'Waiting for budget approval'){% endif %}"></textarea>
+                            <small class="text-muted">
+                                <i class="fas fa-lock"></i> 
+                                {% if lang == 'ne' %}यो टिप्पणी केवल प्रशासकहरूलाई देखिनेछ, नागरिकहरूलाई होइन।{% else %}This remark will only be visible to admins, not to citizens.{% endif %}
+                            </small>
+                        </div>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="fas fa-save"></i> 
+                            {% if lang == 'ne' %}टिप्पणी सुरक्षित गर्नुहोस्{% else %}Save Remark{% endif %}
+                        </button>
+                    </form>
+                </div>
             </div>
 
             <!-- Action Buttons -->

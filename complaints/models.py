@@ -95,3 +95,29 @@ class Complaint(models.Model):
             models.Index(fields=['status', 'created_at']),
             models.Index(fields=['ward', 'status']),
         ]
+
+
+class Remark(models.Model):
+    """Admin internal remarks/notes for complaints"""
+    
+    complaint = models.ForeignKey(
+        Complaint,
+        on_delete=models.CASCADE,
+        related_name='remarks'
+    )
+    admin_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='admin_remarks'
+    )
+    remark = models.TextField(help_text="Internal note visible only to admins")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Remark by {self.admin_user.fullname} on Complaint #{self.complaint.id}"
+    
+    class Meta:
+        db_table = 'complaint_remarks'
+        ordering = ['-created_at']
+        verbose_name = 'Admin Remark'
+        verbose_name_plural = 'Admin Remarks'
