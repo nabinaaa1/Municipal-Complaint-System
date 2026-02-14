@@ -20,6 +20,14 @@ def is_admin(user):
 def admin_dashboard(request):
     """Admin dashboard with statistics"""
     
+    # Auto-update priorities for old complaints
+    old_complaints = Complaint.objects.filter(
+        status__in=['Pending', 'In Progress']
+    ).exclude(status='Resolved')
+    
+    for complaint in old_complaints:
+        complaint.update_priority()
+    
     # Get statistics
     total_complaints = Complaint.objects.count()
     pending_complaints = Complaint.objects.filter(status='Pending').count()
@@ -62,6 +70,13 @@ def admin_dashboard(request):
 @user_passes_test(is_admin)
 def admin_complaint_list(request):
     """Admin view to list and filter all complaints"""
+    
+    # Auto-update priorities
+    old_complaints = Complaint.objects.filter(
+        status__in=['Pending', 'In Progress']
+    )
+    for complaint in old_complaints:
+        complaint.update_priority()
     
     # Get all complaints
     complaints_list = Complaint.objects.select_related('user').order_by('-created_at')
@@ -138,6 +153,9 @@ def admin_complaint_detail(request, pk):
     """Admin view to see complaint details, update status, and manage remarks"""
     
     complaint = get_object_or_404(Complaint, pk=pk)
+    
+    # Auto-update priority
+    complaint.update_priority()
     
     # Handle status update
     if request.method == 'POST':
@@ -321,7 +339,7 @@ def export_complaints_csv(request):
     response['Content-Disposition'] = f'attachment; filename="complaints_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv"'
     
     writer = csv.writer(response)
-    writer.writerow(['ID', 'Citizen Name', 'Email', 'Phone', 'Ward', 'Category', 'Description', 'Status', 'Created At', 'Updated At'])
+    writer.writerow(['ID', 'Citizen Name', 'Email', 'Phone', 'Ward', 'Category', 'Priority', 'Description', 'Status', 'Days Old', 'Created At', 'Updated At'])
     
     for complaint in complaints:
         writer.writerow([
@@ -331,8 +349,10 @@ def export_complaints_csv(request):
             complaint.user.phone or 'N/A',
             f'Ward {complaint.ward}',
             complaint.category,
+            complaint.priority,
             complaint.description,
             complaint.status,
+            complaint.days_since_creation(),
             complaint.created_at.strftime('%Y-%m-%d %H:%M:%S'),
             complaint.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
         ])

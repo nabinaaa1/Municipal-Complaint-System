@@ -124,6 +124,10 @@ TRANSLATIONS = {
         'submitted': 'Submitted',
         'your_complaint_id': 'Your complaint ID is',
         'complaint_successfully_submitted': 'Complaint submitted successfully!',
+        'priority': 'Priority',
+        'urgent': 'Urgent',
+        'normal': 'Normal',
+        'days_old': 'days old',
         
         # ============ CATEGORIES ============
         'road_maintenance': 'Road Maintenance',
@@ -374,6 +378,10 @@ TRANSLATIONS = {
         'submitted': 'पेश गरियो',
         'your_complaint_id': 'तपाईंको गुनासो आईडी',
         'complaint_successfully_submitted': 'गुनासो सफलतापूर्वक पेश गरियो!',
+        'priority': 'प्राथमिकता',
+        'urgent': 'अत्यावश्यक',
+        'normal': 'सामान्य',
+        'days_old': 'दिन पुरानो',
         
         # ============ CATEGORIES ============
         'road_maintenance': 'सडक मर्मत',

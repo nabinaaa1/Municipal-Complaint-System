@@ -5,6 +5,8 @@ import os
 from PIL import Image
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.utils import timezone
+from datetime import timedelta
 
 def complaint_image_path(instance, filename):
     """Generate unique filename using UUID"""
@@ -13,7 +15,7 @@ def complaint_image_path(instance, filename):
     return os.path.join('complaints', filename)
 
 class Complaint(models.Model):
-    """Complaint model with ward selection"""
+    """Complaint model with ward selection and priority"""
     
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
@@ -29,6 +31,11 @@ class Complaint(models.Model):
         ('Traffic', 'Traffic'),
         ('Parks', 'Parks & Recreation'),
         ('Other', 'Other'),
+    ]
+    
+    PRIORITY_CHOICES = [
+        ('Normal', 'Normal'),
+        ('Urgent', 'Urgent'),
     ]
     
     # Ward choices (1-15)
@@ -48,11 +55,23 @@ class Complaint(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to=complaint_image_path, blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    priority = models.CharField(
+        max_length=10, 
+        choices=PRIORITY_CHOICES, 
+        default='Normal',
+        help_text="Priority level - Auto-flagged as Urgent after 7 days"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def save(self, *args, **kwargs):
-        """Override save to compress image before saving"""
+        """Override save to compress image and update priority before saving"""
+        # Auto-update priority if older than 7 days and not resolved
+        if self.pk and self.status != 'Resolved':
+            days_old = (timezone.now() - self.created_at).days
+            if days_old >= 7:
+                self.priority = 'Urgent'
+        
         if self.image:
             # Open the image
             img = Image.open(self.image)
@@ -83,6 +102,24 @@ class Complaint(models.Model):
         
         super().save(*args, **kwargs)
     
+    def update_priority(self):
+        """Auto-update priority to Urgent if complaint is older than 7 days and not resolved"""
+        if self.status != 'Resolved':
+            days_old = (timezone.now() - self.created_at).days
+            if days_old >= 7 and self.priority != 'Urgent':
+                self.priority = 'Urgent'
+                self.save(update_fields=['priority'])
+                return True
+        return False
+    
+    def is_old(self):
+        """Check if complaint is older than 7 days"""
+        return (timezone.now() - self.created_at).days >= 7
+    
+    def days_since_creation(self):
+        """Get number of days since complaint was created"""
+        return (timezone.now() - self.created_at).days
+    
     def __str__(self):
         return f"Ward {self.ward} - {self.category} - {self.user.fullname}"
     
@@ -94,6 +131,7 @@ class Complaint(models.Model):
         indexes = [
             models.Index(fields=['status', 'created_at']),
             models.Index(fields=['ward', 'status']),
+            models.Index(fields=['priority', 'status']),
         ]
 
 
