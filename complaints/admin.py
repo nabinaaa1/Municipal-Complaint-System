@@ -3,10 +3,10 @@ from .models import Complaint, Remark
 
 @admin.register(Complaint)
 class ComplaintAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'ward', 'category', 'priority_badge', 'status', 'days_old', 'created_at']
+    list_display = ['id', 'user', 'ward', 'category', 'priority', 'status', 'days_old', 'created_at']
     list_filter = ['status', 'priority', 'category', 'ward', 'created_at']
     search_fields = ['user__fullname', 'user__email', 'description']
-    list_editable = ['status'] 
+    list_editable = ['status', 'priority']
     date_hierarchy = 'created_at'
     readonly_fields = ['created_at', 'updated_at', 'days_old_display']
     actions = ['mark_as_urgent', 'mark_as_normal', 'auto_update_priorities']
@@ -24,23 +24,10 @@ class ComplaintAdmin(admin.ModelAdmin):
         }),
     )
     
-    def priority_badge(self, obj):
-        """Display priority with color badge"""
-        if obj.priority == 'Urgent':
-            return '🔴 Urgent'
-        else:
-            return '🟢 Normal'
-    priority_badge.short_description = 'Priority'
-    
     def days_old(self, obj):
-        """Display days since creation with color coding"""
+        """Display days since creation"""
         days = obj.days_since_creation()
-        if days >= 7:
-            return f'🔴 {days} days'
-        elif days >= 5:
-            return f'🟡 {days} days'
-        else:
-            return f'🟢 {days} days'
+        return f"{days} days"
     days_old.short_description = 'Age'
     
     def days_old_display(self, obj):

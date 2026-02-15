@@ -204,12 +204,15 @@
                         <td><span class="badge bg-primary">{{ ward.in_progress }}</span></td>
                         <td><span class="badge bg-success">{{ ward.resolved }}</span></td>
                         <td>
-                            <div class="progress-bar-custom">
-                                <div class="progress-bar-fill" style="width: {{ ward.percentage }}%;">
-                                    {{ ward.percentage|floatformat:1 }}%
-                                </div>
-                            </div>
-                        </td>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="progress-bar-custom" style="flex: 1;">
+            <div class="progress-bar-fill" style="width: {{ ward.percentage }}%;"></div>
+        </div>
+        <span style="min-width: 50px; font-weight: bold; color: #2563a8;">
+            {{ ward.percentage|floatformat:1 }}%
+        </span>
+    </div>
+</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -254,12 +257,15 @@
                         <td><span class="badge bg-primary">{{ category.in_progress }}</span></td>
                         <td><span class="badge bg-success">{{ category.resolved }}</span></td>
                         <td>
-                            <div class="progress-bar-custom">
-                                <div class="progress-bar-fill" style="width: {{ category.percentage }}%;">
-                                    {{ category.percentage|floatformat:1 }}%
-                                </div>
-                            </div>
-                        </td>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="progress-bar-custom" style="flex: 1;">
+            <div class="progress-bar-fill" style="width: {{ category.percentage }}%;"></div>
+        </div>
+        <span style="min-width: 50px; font-weight: bold; color: #2563a8;">
+            {{ category.percentage|floatformat:1 }}%
+        </span>
+    </div>
+</td>
                     </tr>
                     {% endfor %}
                 </tbody>
