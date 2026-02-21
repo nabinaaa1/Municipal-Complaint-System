@@ -147,21 +147,46 @@ Can be scheduled as a cron job:
 ## Usage
 
 ### Citizen Flow
-1. Register at /accounts/register/
-2. Login at /accounts/login/
-3. Submit a complaint at /complaints/submit/
-4. Track complaints at /complaints/my-complaints/
-5. Give feedback on resolved complaints
+1. Register at `/accounts/register/`
+2. Login at `/accounts/login/`
+3. Submit a complaint at `/complaints/submit/`
+4. Track complaints at `/complaints/my-complaints/`
+5. Give feedback on resolved complaints at `/feedback/submit/<complaint_id>/`
 
 ### Admin Flow
-1. Login via the Admin Login button on the home page
-2. View dashboard at /complaints/admin/dashboard/
-3. Manage complaints at /complaints/admin/list/
-4. View statistics at /complaints/admin/statistics/
-5. Export data via the CSV export button
+1. Login at `/admin/` using your superuser credentials
+2. View dashboard at `/complaints/admin/dashboard/`
+3. Manage complaints at `/complaints/admin/list/`
+4. View statistics at `/complaints/admin/statistics/`
+5. Export data via the CSV export button on the complaint list page
 
 ### Language Switching
-Click EN / NE in the navbar to switch between English and Nepali. Preference is saved for the session.
+Click **EN / NE** in the navbar to switch between English and Nepali. Preference is saved for the session.
+
+---
+
+## Known Issues & Notes
+
+### Timezone
+The project uses `TIME_ZONE = 'UTC'` in settings. Nepal Standard Time is UTC+5:45. Complaint timestamps will display in UTC rather than local Nepal time. To fix this, update `settings.py`:
+
+```python
+TIME_ZONE = 'Asia/Kathmandu'
+```
+
+### STATIC_ROOT
+`STATIC_ROOT` is not defined in `settings.py`. If you run `collectstatic` for production deployment, add the following to `settings.py`:
+
+```python
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+```
+
+### Template Bug
+There is a syntax error in `complaints/templates/complaints/admin_complaint_list.html` on line 2. The closing `}}` is missing on `t.mechinagar_municipality`. This causes a template rendering error on the Manage Complaints page. The correct line should be:
+
+```django
+{% block title %}{{ t.manage_complaints }} - {{ t.mechinagar_municipality }}{% endblock %}
+```
 
 ---
 
