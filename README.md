@@ -105,14 +105,15 @@ http://127.0.0.1:8000/
 
 ```
 Municipal-Complaint-System/
-├── accounts/        # Custom User model, registration, login, citizen dashboard
-├── complaints/      # Complaint model, citizen views, admin views, admin dashboard
-├── feedback/        # Feedback model, star rating, feedback listing
-├── core/            # Home page, language switching, translation system
-├── templates/       # Base template and all HTML templates
-├── static/          # Static files (CSS, JS, images)
-├── media/           # Uploaded complaint images
-├── db.sqlite3       # SQLite database
+├── mechinagar_system/   # Project config (settings, urls, wsgi, asgi)
+├── accounts/            # Custom User model, registration, login, citizen dashboard
+├── complaints/          # Complaint model, citizen views, admin views, admin dashboard
+├── feedback/            # Feedback model, star rating, feedback listing
+├── core/                # Home page, language switching, translation system
+├── templates/           # Base template and all HTML templates
+├── static/              # Static files (CSS, JS, images)
+├── media/               # Uploaded complaint images
+├── db.sqlite3           # SQLite database
 └── manage.py
 ```
 
