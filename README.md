@@ -165,31 +165,6 @@ Click **EN / NE** in the navbar to switch between English and Nepali. Preference
 
 ---
 
-## Known Issues & Notes
-
-### Timezone
-The project uses `TIME_ZONE = 'UTC'` in settings. Nepal Standard Time is UTC+5:45. Complaint timestamps will display in UTC rather than local Nepal time. To fix this, update `settings.py`:
-
-```python
-TIME_ZONE = 'Asia/Kathmandu'
-```
-
-### STATIC_ROOT
-`STATIC_ROOT` is not defined in `settings.py`. If you run `collectstatic` for production deployment, add the following to `settings.py`:
-
-```python
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-```
-
-### Template Bug
-There is a syntax error in `complaints/templates/complaints/admin_complaint_list.html` on line 2. The closing `}}` is missing on `t.mechinagar_municipality`. This causes a template rendering error on the Manage Complaints page. The correct line should be:
-
-```django
-{% block title %}{{ t.manage_complaints }} - {{ t.mechinagar_municipality }}{% endblock %}
-```
-
----
-
 ## License
 
 This project was developed as part of an internship at **Mechinagar Municipality IT Department**, Jhapa, Nepal.
